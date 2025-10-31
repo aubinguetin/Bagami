@@ -1,0 +1,560 @@
+
+> bagami@1.0.0 dev
+> next dev -p 3002
+
+  ▲ Next.js 13.5.11
+  - Local:        http://localhost:3002
+  - Environments: .env.local, .env
+
+ ✓ Ready in 1295ms
+ ✓ Compiled /src/middleware in 272ms (155 modules)
+ ✓ Compiled /auth/page in 1849ms (671 modules)
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+ ✓ Compiled in 146ms (343 modules)
+ ✓ Compiled /api/auth/send-otp/route in 246ms (725 modules)
+✅ Server-side country validation passed: {
+  phoneNumber: '+22665502626',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`phone` = ? AND `main`.`User`.`phoneVerified` IS NOT NULL) LIMIT ? OFFSET ?
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ? AND phoneVerified IS NOT NULL
+              LIMIT 1
+            
+🛑 Preventing OTP send - verified user exists: {
+  contact: '+22665502626',
+  type: 'phone',
+  userId: 'cmg9e02is0003wwqxs0fgax05'
+}
+ ✓ Compiled /api/messages/unread-count/route in 280ms (627 modules)
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+✅ Server-side country validation passed: {
+  phoneNumber: '+22699999999',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`phone` = ? AND `main`.`User`.`phoneVerified` IS NOT NULL) LIMIT ? OFFSET ?
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ? AND phoneVerified IS NOT NULL
+              LIMIT 1
+            
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Checking separated phone format: {
+  fullPhone: '+22699999999',
+  countryCode: '+226',
+  localPhone: '99999999'
+}
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+✅ No existing user found - proceeding with OTP: { contact: '+22699999999', type: 'phone' }
+📱 Sending signup OTP SMS to: +22699999999
+📦 Storing OTP: {
+  originalPhone: '+22699999999',
+  sanitizedPhone: '+22699999999',
+  originalOtp: '723846',
+  sanitizedOtp: '723846',
+  otpLength: 6,
+  expiresAt: '2025-10-06T03:56:15.713Z'
+}
+💾 Saved 1 OTPs to file
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+ ✓ Compiled /api/auth/[...nextauth]/route in 71ms (629 modules)
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+✅ Server-side country validation passed: {
+  phoneNumber: '+22665502626',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`phone` = ? AND `main`.`User`.`phoneVerified` IS NOT NULL) LIMIT ? OFFSET ?
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ? AND phoneVerified IS NOT NULL
+              LIMIT 1
+            
+🛑 Preventing OTP send - verified user exists: {
+  contact: '+22665502626',
+  type: 'phone',
+  userId: 'cmg9e02is0003wwqxs0fgax05'
+}
+ ✓ Compiled /api/auth/verify-otp/route in 87ms (631 modules)
+🧪 Test account detected - bypassing OTP verification
+💾 Creating/updating user in database for: +22677799171
+🔍 Checking for existing user with phone: +22677799171
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Checking separated format: { countryCode: '+226', localPhone: '77799171' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`countryCode` = ? AND `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+✅ Found user with separated phone format
+👤 Found existing user: cmg8nj2wp000jkbz08fvqaa1h Active: true
+prisma:query UPDATE `main`.`User` SET `phoneVerified` = ?, `updatedAt` = ? WHERE (`main`.`User`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `email` AS `email`, `emailVerified` AS `emailVerified`, `image` AS `image`, `phone` AS `phone`, `phoneVerified` AS `phoneVerified`, `countryCode` AS `countryCode`, `password` AS `password`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`, `country` AS `country`, `isActive` AS `isActive`
+✅ Existing user verified: cmg8nj2wp000jkbz08fvqaa1h
+🔍 Credentials provider called with: {
+  contact: '+22677799171',
+  verified: 'true',
+  redirect: 'false',
+  csrfToken: '9285622679a865d322fd6207b073d7e377f3c4cf52ae5900e50ec453787b170a',
+  callbackUrl: 'http://localhost:3002/auth',
+  json: 'true'
+}
+🔎 Looking for user with contact: +22677799171
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Trying authentication lookup: { countryCode: '+226', localPhone: '77799171' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`countryCode` = ? AND `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+✅ Found user with separated phone format
+👤 Found user: Yes
+✅ OTP verification - User verification status: Verified
+🎯 OTP verification success - Returning authenticated user: {
+  id: 'cmg8nj2wp000jkbz08fvqaa1h',
+  email: null,
+  name: null,
+  image: null,
+  phone: '77799171'
+}
+ ✓ Compiled /dashboard/page in 1065ms (1221 modules)
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ⨯ Internal error: Error: The render was aborted by the server without a reason.
+    at eG (/Users/aubinguetin/APPs/Bagami2/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:11:330486)
+    at Object.cancel (/Users/aubinguetin/APPs/Bagami2/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js:11:343916)
+    at invokePromiseCallback (node:internal/webstreams/util:172:10)
+    at Object.cancelAlgorithm (node:internal/webstreams/util:177:23)
+    at readableByteStreamControllerCancelSteps (node:internal/webstreams/readablestream:3171:37)
+    at [kCancel] (node:internal/webstreams/readablestream:1197:12)
+    at readableStreamCancel (node:internal/webstreams/readablestream:2018:39)
+    at node:internal/webstreams/readablestream:1549:15
+    at complete (node:internal/webstreams/readablestream:1438:9)
+    at shutdownWithAnAction (node:internal/webstreams/readablestream:1434:5)
+    at node:internal/webstreams/readablestream:1548:14
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`id` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) FROM (SELECT `main`.`Message`.`id` FROM `main`.`Message` LEFT JOIN `main`.`Conversation` AS `j1` ON (`j1`.`id`) = (`main`.`Message`.`conversationId`) WHERE (`main`.`Message`.`isRead` = ? AND `main`.`Message`.`senderId` <> ? AND ((`j1`.`participant1Id` = ? OR `j1`.`participant2Id` = ?) AND (`j1`.`id` IS NOT NULL))) LIMIT ? OFFSET ?) AS `sub`
+ ✓ Compiled /api/user/profile/route in 123ms (765 modules)
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`country`, `main`.`User`.`image`, `main`.`User`.`createdAt` FROM `main`.`User` WHERE (`main`.`User`.`id` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`country`, `main`.`User`.`image`, `main`.`User`.`createdAt` FROM `main`.`User` WHERE (`main`.`User`.`id` = ? AND 1=1) LIMIT ? OFFSET ?
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 376ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 305ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 414ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 300ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 208ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 202ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 255ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled /api/auth/[...nextauth]/route in 503ms (714 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 403ms (472 modules)
+ ✓ Compiled in 449ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 239ms (1184 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled /api/auth/send-otp/route in 235ms (759 modules)
+✅ Server-side country validation passed: {
+  phoneNumber: '+22688888888',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+🔍 Password reset - checking separated phone format: {
+  fullPhone: '+22688888888',
+  countryCode: '+226',
+  localPhone: '88888888'
+}
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+💰 Preventing password reset OTP - user does not exist: { contact: '+22688888888', type: 'phone' }
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+✅ Server-side country validation passed: {
+  phoneNumber: '+22665502626',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Password reset - checking separated phone format: {
+  fullPhone: '+22665502626',
+  countryCode: '+226',
+  localPhone: '65502626'
+}
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+✅ User found - proceeding with password reset OTP: {
+  contact: '+22665502626',
+  type: 'phone',
+  userId: 'cmg9e02is0003wwqxs0fgax05'
+}
+📂 Loaded 0 active OTPs from file
+📱 Sending password-reset OTP SMS to: +22665502626
+📂 Loaded 0 active OTPs from file
+📦 Storing OTP: {
+  originalPhone: '+22665502626',
+  sanitizedPhone: '+22665502626',
+  originalOtp: '697842',
+  sanitizedOtp: '697842',
+  otpLength: 6,
+  expiresAt: '2025-10-06T04:16:39.830Z'
+}
+💾 Saved 1 OTPs to file
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`email` = ? LIMIT ? OFFSET ?
+💰 Preventing password reset OTP - user does not exist: { contact: 'nonexistent@test.com', type: 'email' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`email` = ? LIMIT ? OFFSET ?
+✅ User found - proceeding with password reset OTP: {
+  contact: 'aubin.guetin@sciencespo.fr',
+  type: 'email',
+  userId: 'cmg9e5bdn000mwwqxzhwogxjh'
+}
+📂 Loaded 1 active OTPs from file
+📧 Sending password-reset OTP email to: aubin.guetin@sciencespo.fr
+✅ Password reset OTP email sent successfully: <8628e75c-ce99-a2a7-d4e7-c0bb6149c083@gmail.com>
+📂 Loaded 1 active OTPs from file
+📦 Storing OTP: {
+  originalPhone: 'aubin.guetin@sciencespo.fr',
+  sanitizedPhone: 'aubin.guetin@sciencespo.fr',
+  originalOtp: '536856',
+  sanitizedOtp: '536856',
+  otpLength: 6,
+  expiresAt: '2025-10-06T04:19:20.226Z'
+}
+💾 Saved 2 OTPs to file
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+ ✓ Compiled /api/auth/[...nextauth]/route in 117ms (759 modules)
+ ✓ Compiled /api/messages/unread-count/route in 252ms (761 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`email` = ? LIMIT ? OFFSET ?
+💰 Preventing password reset OTP - user does not exist: { contact: 'guetinaubin@yahoo.com', type: 'email' }
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`email` = ? LIMIT ? OFFSET ?
+💰 Preventing password reset OTP - user does not exist: { contact: 'guetinaubin@yahoo.com', type: 'email' }
+✅ Server-side country validation passed: { phoneNumber: '+173829742', country: 'United States', dialCode: '+1' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Password reset - checking separated phone format: { fullPhone: '+173829742', countryCode: '+1', localPhone: '73829742' }
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+💰 Preventing password reset OTP - user does not exist: { contact: '+173829742', type: 'phone' }
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+✅ Server-side country validation passed: {
+  phoneNumber: '+22673829742',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+🔍 Password reset - checking separated phone format: {
+  fullPhone: '+22673829742',
+  countryCode: '+226',
+  localPhone: '73829742'
+}
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+✅ User found - proceeding with password reset OTP: {
+  contact: '+22673829742',
+  type: 'phone',
+  userId: 'cmg9dyx9z0002wwqxd3qwg2az'
+}
+📂 Loaded 2 active OTPs from file
+📱 Sending password-reset OTP SMS to: +22673829742
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+📂 Loaded 2 active OTPs from file
+📦 Storing OTP: {
+  originalPhone: '+22673829742',
+  sanitizedPhone: '+22673829742',
+  originalOtp: '298215',
+  sanitizedOtp: '298215',
+  otpLength: 6,
+  expiresAt: '2025-10-06T04:20:38.123Z'
+}
+💾 Saved 3 OTPs to file
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 710ms (923 modules)
+ ✓ Compiled /api/auth/[...nextauth]/route in 224ms (712 modules)
+ ✓ Compiled (714 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+🏠 Dashboard render: { session: undefined, status: 'loading', isAuthenticated: false }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled /api/auth/send-otp/route in 138ms (761 modules)
+✅ Server-side country validation passed: {
+  phoneNumber: '+22665502626',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`phone` = ? AND `main`.`User`.`phoneVerified` IS NOT NULL) LIMIT ? OFFSET ?
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ? AND phoneVerified IS NOT NULL
+              LIMIT 1
+            
+🛑 Preventing OTP send - verified user exists: {
+  contact: '+22665502626',
+  type: 'phone',
+  userId: 'cmg9e02is0003wwqxs0fgax05'
+}
+✅ Server-side country validation passed: {
+  phoneNumber: '+22665502620',
+  country: 'Burkina Faso',
+  dialCode: '+226'
+}
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Password reset - checking separated phone format: {
+  fullPhone: '+22665502620',
+  countryCode: '+226',
+  localPhone: '65502620'
+}
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+💰 Preventing password reset OTP - user does not exist: { contact: '+22665502620', type: 'phone' }
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+🏁 Initial default country set to: { name: 'United States', dialCode: '+1', code: 'US' }
+✅ Server-side country validation passed: { phoneNumber: '+22889274413', country: 'Togo', dialCode: '+228' }
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`phone` = ? AND `main`.`User`.`phoneVerified` IS NOT NULL) LIMIT ? OFFSET ?
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ? AND phoneVerified IS NOT NULL
+              LIMIT 1
+            
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+🔍 Checking separated phone format: {
+  fullPhone: '+22889274413',
+  countryCode: '+228',
+  localPhone: '89274413'
+}
+prisma:query 
+              SELECT * FROM User 
+              WHERE countryCode = ? AND phone = ?
+              LIMIT 1
+            
+✅ No existing user found - proceeding with OTP: { contact: '+22889274413', type: 'phone' }
+📂 Loaded 0 active OTPs from file
+📱 Sending signup OTP SMS to: +22889274413
+📂 Loaded 0 active OTPs from file
+📦 Storing OTP: {
+  originalPhone: '+22889274413',
+  sanitizedPhone: '+22889274413',
+  originalOtp: '831824',
+  sanitizedOtp: '831824',
+  otpLength: 6,
+  expiresAt: '2025-10-06T12:33:28.550Z'
+}
+💾 Saved 1 OTPs to file
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`phone` = ? AND `main`.`User`.`phoneVerified` IS NOT NULL) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE `main`.`User`.`phone` = ? LIMIT ? OFFSET ?
+✅ No existing user found - proceeding with OTP: { contact: '+22889274413', type: 'phone' }
+📂 Loaded 1 active OTPs from file
+📂 Loaded 1 active OTPs from file
+💾 Saved 0 OTPs to file
+🔄 Cleared existing OTP for: +22889274413
+📱 Sending signup OTP SMS to: +22889274413
+📂 Loaded 0 active OTPs from file
+📦 Storing OTP: {
+  originalPhone: '+22889274413',
+  sanitizedPhone: '+22889274413',
+  originalOtp: '272211',
+  sanitizedOtp: '272211',
+  otpLength: 6,
+  expiresAt: '2025-10-06T12:34:01.529Z'
+}
+💾 Saved 1 OTPs to file
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?
+ ✓ Compiled in 1398ms (1186 modules)
+ ✓ Compiled in 347ms (1184 modules)
+ ✓ Compiled in 730ms (923 modules)
+ ✓ Compiled in 370ms (923 modules)
+ ✓ Compiled /api/messages/unread-count/route in 498ms (712 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`User`.`id`, `main`.`User`.`name`, `main`.`User`.`email`, `main`.`User`.`emailVerified`, `main`.`User`.`image`, `main`.`User`.`phone`, `main`.`User`.`phoneVerified`, `main`.`User`.`countryCode`, `main`.`User`.`password`, `main`.`User`.`createdAt`, `main`.`User`.`updatedAt`, `main`.`User`.`country`, `main`.`User`.`isActive` FROM `main`.`User` WHERE (`main`.`User`.`email` = ? OR `main`.`User`.`phone` = ?) LIMIT ? OFFSET ?

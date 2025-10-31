@@ -1,0 +1,54 @@
+{
+  "name": "bagami",
+  "version": "1.0.0",
+  "description": "Bagami - Business Application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev -p 3002 -H 0.0.0.0",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
+    "@hookform/resolvers": "^3.1.0",
+    "@prisma/client": "^5.22.0",
+    "@tanstack/react-query": "^5.90.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/nodemailer": "^7.0.2",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.0.0",
+    "country-state-city": "^3.2.1",
+    "i18n-iso-countries": "^7.14.0",
+    "lucide-react": "^0.263.0",
+    "next": "^13.5.0",
+    "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
+    "prisma": "^5.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "yup": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.44.0",
+    "eslint-config-next": "^13.5.0",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.1.0"
+  },
+  "keywords": [
+    "bagami",
+    "business",
+    "app",
+    "authentication"
+  ],
+  "author": "Bagami Team",
+  "license": "MIT"
+}
