@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { getUserLocale, generateAlertMatchNotification } from './notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
@@ -100,7 +101,6 @@ export async function checkAndNotifyAlertMatches(delivery: DeliveryData) {
       return;
     }
 
-    // Create notifications for each matching alert
     const notifications = await Promise.all(
       matchingAlerts.map(async (alert) => {
         const locale = await getUserLocale(alert.userId);
@@ -113,7 +113,7 @@ export async function checkAndNotifyAlertMatches(delivery: DeliveryData) {
           locale
         );
 
-        return prisma.notification.create({
+        const created = await prisma.notification.create({
           data: {
             userId: alert.userId,
             type: 'alert_match',
@@ -123,6 +123,8 @@ export async function checkAndNotifyAlertMatches(delivery: DeliveryData) {
             isRead: false
           }
         });
+        await sendNotificationToUser({ userId: alert.userId, title, body: message, data: { relatedId: delivery.id } })
+        return created
       })
     );
 

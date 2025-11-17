@@ -108,9 +108,10 @@ export async function PATCH(request: Request) {
       );
     }
 
+    const updatedCount = markAllAsRead ? (result as any).count ?? 0 : 1
     return NextResponse.json({
       success: true,
-      updated: markAllAsRead ? result.count : 1
+      updated: updatedCount
     });
   } catch (error) {
     console.error('❌ Error marking notifications as read:', error);

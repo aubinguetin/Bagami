@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateRatingReminderNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 // Reminder intervals in milliseconds
 const REMINDER_INTERVALS = [
@@ -279,7 +280,7 @@ async function createRatingReminder(
       locale
     );
 
-    await prisma.notification.create({
+    const created = await prisma.notification.create({
       data: {
         userId: userId,
         type: 'rating_reminder',
@@ -289,7 +290,7 @@ async function createRatingReminder(
         isRead: false,
       },
     });
-
+    await sendNotificationToUser({ userId, title, body: message, data: { relatedId: conversationId || '' } })
     console.log(`✅ Rating reminder created for user ${userId}`);
   } catch (error) {
     console.error('❌ Error creating rating reminder:', error);

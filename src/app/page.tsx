@@ -123,44 +123,15 @@ export default function Homepage() {
     }
   }, [status, router]);
 
-  // Enhanced polling with smart intervals and visibility detection
   useEffect(() => {
     if (!isAuthenticated) return;
-
     fetchUnreadCount();
-    
-    // Smart polling: faster when active, slower when background
-    const getPollingInterval = () => {
-      return document.hidden ? 30000 : 5000; // 30s background, 5s active
-    };
-
-    let interval = setInterval(fetchUnreadCount, getPollingInterval());
-
-    // Handle visibility change for immediate updates
-    const handleVisibilityChange = () => {
-      clearInterval(interval);
-      
-      if (!document.hidden) {
-        // Immediate refresh when returning to tab
-        fetchUnreadCount();
-      }
-      
-      // Restart with appropriate interval
-      interval = setInterval(fetchUnreadCount, getPollingInterval());
-    };
-
-    // Listen for focus events for even faster response
-    const handleFocus = () => {
+    const onNotif = () => {
       fetchUnreadCount();
     };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleFocus);
-    
+    window.addEventListener('bagami-notification', onNotif as any);
     return () => {
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('bagami-notification', onNotif as any);
     };
   }, [isAuthenticated]);
 

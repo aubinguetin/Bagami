@@ -24,7 +24,7 @@ export async function GET() {
     });
 
     // Get some sample conversations if they exist
-    let sampleConversations = [];
+    let sampleConversations: any[] = [];
     if (sampleUser) {
       sampleConversations = await prisma.conversation.findMany({
         where: {

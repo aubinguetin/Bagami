@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 import { checkBackofficeAuth, hasPermission } from '@/lib/backofficeAuth';
 
 export async function POST(request: NextRequest) {
@@ -76,6 +77,15 @@ export async function POST(request: NextRequest) {
     const result = await prisma.notification.createMany({
       data: notifications,
     });
+
+    for (const userId of targetUserIds) {
+      await sendNotificationToUser({
+        userId,
+        title: title.trim(),
+        body: message.trim(),
+        data: link && link.trim() ? { link: link.trim() } : undefined,
+      })
+    }
 
     // Log admin action
     try {

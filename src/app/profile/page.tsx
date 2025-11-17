@@ -656,45 +656,14 @@ export default function ProfilePage() {
     fetchUnreadCount();
     fetchUnreadNotificationCount();
     
-    // Smart polling: faster when active, slower when background
-    const getPollingInterval = () => {
-      return document.hidden ? 30000 : 5000; // 30s background, 5s active
-    };
-
-    let interval = setInterval(() => {
-      fetchUnreadCount();
-      fetchUnreadNotificationCount();
-    }, getPollingInterval());
-
-    // Handle visibility change for immediate updates
-    const handleVisibilityChange = () => {
-      clearInterval(interval);
-      
-      if (!document.hidden) {
-        // Immediate refresh when returning to tab
-        fetchUnreadCount();
-        fetchUnreadNotificationCount();
-      }
-      
-      // Restart with appropriate interval
-      interval = setInterval(() => {
-        fetchUnreadCount();
-        fetchUnreadNotificationCount();
-      }, getPollingInterval());
-    };
-
-    // Listen for focus events for even faster response
-    const handleFocus = () => {
+    const onNotif = (e: any) => {
+      const unread = e?.detail?.data?.unreadCount;
+      if (typeof unread !== 'undefined') setUnreadNotificationCount(parseInt(unread));
       fetchUnreadCount();
     };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleFocus);
-    
+    window.addEventListener('bagami-notification', onNotif as any);
     return () => {
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('bagami-notification', onNotif as any);
     };
   }, [isAuthenticated]);
 

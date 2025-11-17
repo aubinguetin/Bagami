@@ -269,8 +269,8 @@ export const useUnreadCount = (options?: Partial<UseQueryOptions<number, Error>>
     gcTime: 2 * 60 * 1000, // 2 minutes
     refetchOnWindowFocus: true,
     refetchOnMount: 'always',
-    refetchInterval: 5 * 1000, // Auto-refetch every 5 seconds
-    refetchIntervalInBackground: true,
+    refetchInterval: undefined,
+    refetchIntervalInBackground: undefined,
     retry: 3,
     ...options,
   });
