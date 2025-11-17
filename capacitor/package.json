@@ -1,0 +1,23 @@
+{
+  "name": "bagami-capacitor",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "init": "npx cap init bagami com.bagami.app --web-dir=../out",
+    "sync": "npx cap sync",
+    "add:ios": "npx cap add ios",
+    "add:android": "npx cap add android",
+    "open:ios": "npx cap open ios",
+    "open:android": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/ios": "^6.1.0",
+    "@capacitor/android": "^6.1.0",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.1.0"
+  }
+}

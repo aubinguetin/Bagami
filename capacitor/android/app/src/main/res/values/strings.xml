@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">bagami</string>
+    <string name="title_activity_main">bagami</string>
+    <string name="package_name">com.bagami.app</string>
+    <string name="custom_url_scheme">com.bagami.app</string>
+</resources>
