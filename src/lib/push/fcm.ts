@@ -26,7 +26,7 @@ export async function sendNotificationToUser(params: {
   data?: Record<string, string>
 }) {
   ensureInitialized()
-  const tokens = await prisma.fcmToken.findMany({
+  const tokens: { token: string }[] = await prisma.fcmToken.findMany({
     where: { userId: params.userId, isActive: true },
     select: { token: true },
   })
@@ -48,7 +48,7 @@ export async function sendNotificationToUser(params: {
   }
 
   const response = await messaging.sendEachForMulticast({
-    tokens: tokens.map(t => t.token),
+    tokens: tokens.map((t: { token: string }) => t.token),
     ...payload,
   })
 

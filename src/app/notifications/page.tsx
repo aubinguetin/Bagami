@@ -376,6 +376,32 @@ export default function NotificationsPage() {
             </div>
           )}
 
+          {/* Test FCM notification button */}
+          <div className="mb-4">
+            <button
+              onClick={async () => {
+                try {
+                  const userId = getUserId();
+                  if (!userId) return;
+                  const response = await fetch('/api/notifications/test-fcm', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId }),
+                  })
+                  const data = await response.json()
+                  if (data?.success) {
+                    fetchNotifications();
+                    fetchUnreadCount();
+                  }
+                } catch {}
+              }}
+              className="flex items-center space-x-2 px-4 py-2.5 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors"
+            >
+              <Bell className="w-4 h-4" />
+              <span>Send test push</span>
+            </button>
+          </div>
+
           {notifications.length === 0 ? (
             <div className="text-center py-12">
               <BellOff className="mx-auto h-16 w-16 text-gray-300 mb-4" />
