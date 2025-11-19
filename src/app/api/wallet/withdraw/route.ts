@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { requireActiveUser } from '@/lib/checkUserActive';
 import { emailService } from '@/lib/email';
+import { getUserLocale, generateTransactionNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export async function POST(request: Request) {
   try {
@@ -127,6 +129,31 @@ export async function POST(request: Request) {
       }).catch(error => {
         console.error('Failed to send withdrawal notification email:', error);
       });
+    }
+
+    try {
+      const locale = await getUserLocale(session.user.id);
+      const { title, message } = generateTransactionNotification(
+        'debit',
+        'Withdrawal',
+        amount,
+        'XOF',
+        `Withdrawal to mobile money (${phoneNumber})`,
+        locale
+      );
+      const created = await prisma.notification.create({
+        data: {
+          userId: session.user.id,
+          type: 'transaction',
+          title,
+          message,
+          relatedId: result.transaction.id,
+          isRead: false,
+        },
+      });
+      await sendNotificationToUser({ userId: session.user.id, title, body: message, data: { relatedId: result.transaction.id } });
+    } catch (error) {
+      console.error('Failed to create withdrawal notification:', error);
     }
 
     return NextResponse.json({

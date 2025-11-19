@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateWithdrawalRejectionNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export async function POST(
   request: NextRequest,
@@ -107,7 +108,7 @@ export async function POST(
         locale
       );
       
-      await prisma.notification.create({
+      const created = await prisma.notification.create({
         data: {
           userId: withdrawal.userId,
           type: 'transaction',
@@ -117,6 +118,7 @@ export async function POST(
           isRead: false
         }
       });
+      await sendNotificationToUser({ userId: withdrawal.userId, title, body: message, data: { relatedId: id } });
     } catch (error) {
       console.error('Failed to create withdrawal rejection notification:', error);
     }

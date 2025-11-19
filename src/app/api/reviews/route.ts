@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateReviewNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export async function POST(request: NextRequest) {
   try {
@@ -129,7 +130,7 @@ export async function POST(request: NextRequest) {
         locale
       );
 
-      await prisma.notification.create({
+      const created = await prisma.notification.create({
         data: {
           userId: revieweeId,
           type: 'review',
@@ -139,6 +140,7 @@ export async function POST(request: NextRequest) {
           isRead: false
         }
       });
+      await sendNotificationToUser({ userId: revieweeId, title, body: message, data: { relatedId: review.id } });
       console.log('✅ Review notification created for user:', revieweeId);
     } catch (notifError) {
       console.error('⚠️ Failed to create review notification:', notifError);

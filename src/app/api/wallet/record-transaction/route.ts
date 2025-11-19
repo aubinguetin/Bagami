@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateDirectPaymentNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export async function POST(request: NextRequest) {
   try {
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
         locale
       );
 
-      await prisma.notification.create({
+      const created = await prisma.notification.create({
         data: {
           userId,
           type: 'transaction',
@@ -81,6 +82,7 @@ export async function POST(request: NextRequest) {
           isRead: false
         }
       });
+      await sendNotificationToUser({ userId, title, body: message, data: { relatedId: transaction.id } });
     } catch (error) {
       console.error('Failed to create transaction notification:', error);
     }

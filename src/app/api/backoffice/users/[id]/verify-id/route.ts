@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateIdVerificationNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export async function PATCH(
   request: NextRequest,
@@ -71,7 +72,7 @@ export async function PATCH(
         locale
       );
 
-      await prisma.notification.create({
+      const created = await prisma.notification.create({
         data: {
           userId: userId,
           type: 'id_verification',
@@ -81,6 +82,7 @@ export async function PATCH(
           isRead: false
         }
       });
+      await sendNotificationToUser({ userId, title, body: message, data: { relatedId: documentId } });
     } catch (error) {
       console.error('Failed to create ID verification notification:', error);
     }

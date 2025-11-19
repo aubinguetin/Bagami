@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateTransactionNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export interface TransactionData {
   userId: string;
@@ -96,7 +97,7 @@ export async function createTransaction(data: TransactionData) {
       locale
     );
     
-    await prisma.notification.create({
+    const created = await prisma.notification.create({
       data: {
         userId,
         type: 'transaction',
@@ -106,6 +107,7 @@ export async function createTransaction(data: TransactionData) {
         isRead: false
       }
     });
+    await sendNotificationToUser({ userId, title, body: message, data: { relatedId: transaction.id } });
   } catch (error) {
     // Don't fail the transaction if notification creation fails
     console.error('Failed to create transaction notification:', error);

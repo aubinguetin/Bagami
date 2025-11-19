@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { broadcastToConversation } from '@/lib/sse';
 import { requireActiveUser } from '@/lib/checkUserActive';
+import { getUserLocale } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 // GET - Retrieve messages for a specific conversation
 export async function GET(request: NextRequest, { params }: { params: { conversationId: string } }) {
@@ -385,6 +387,33 @@ export async function POST(request: NextRequest, { params }: { params: { convers
     } catch (unreadError) {
       console.error('Error updating unread count via SSE:', unreadError);
       // Don't fail the API call if unread count update fails
+    }
+
+    // Create notification and push for recipient
+    try {
+      const recipientId = conversation.participant1Id === currentUser.id ? 
+        conversation.participant2Id : 
+        conversation.participant1Id;
+
+      const locale = await getUserLocale(recipientId);
+      const title = '💬 New message';
+      const snippet = (message.content || '').substring(0, 120);
+      const body = snippet ? snippet : 'You have a new message';
+
+      const created = await prisma.notification.create({
+        data: {
+          userId: recipientId,
+          type: 'chat_message',
+          title,
+          message: body,
+          relatedId: conversationId,
+          isRead: false,
+        },
+      });
+      await sendNotificationToUser({ userId: recipientId, title, body, data: { conversationId } });
+      console.log(`🔔 Chat push sent to user ${recipientId} for conversation ${conversationId}`);
+    } catch (pushError) {
+      console.error('Error creating chat notification/push:', pushError);
     }
 
     return NextResponse.json({
