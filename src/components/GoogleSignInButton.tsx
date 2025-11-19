@@ -4,14 +4,17 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useT } from '@/lib/i18n-helpers';
 
+import { Capacitor } from '@capacitor/core';
+import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
+
 interface GoogleSignInButtonProps {
   isSignUp?: boolean;
   className?: string;
 }
 
-export default function GoogleSignInButton({ 
+export default function GoogleSignInButton({
   isSignUp = false,
-  className = "" 
+  className = ""
 }: GoogleSignInButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const t = useT();
@@ -19,10 +22,22 @@ export default function GoogleSignInButton({
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      await signIn('google', {
-        callbackUrl: '/deliveries', // Redirect to deliveries page after sign-in
-        redirect: true,
-      });
+
+      if (Capacitor.isNativePlatform()) {
+        const result = await FirebaseAuthentication.signInWithGoogle();
+        if (result.credential?.idToken) {
+          await signIn('google-mobile', {
+            idToken: result.credential.idToken,
+            callbackUrl: '/deliveries',
+            redirect: true,
+          });
+        }
+      } else {
+        await signIn('google', {
+          callbackUrl: '/deliveries', // Redirect to deliveries page after sign-in
+          redirect: true,
+        });
+      }
     } catch (error) {
       console.error('Google sign-in error:', error);
     } finally {
@@ -62,7 +77,7 @@ export default function GoogleSignInButton({
           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
         />
       </svg>
-      
+
       <span className="text-sm font-medium text-gray-700">
         {isLoading ? loadingText : text}
       </span>

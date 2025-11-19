@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         console.log('🔐 Backoffice login attempt:', credentials?.email);
-        
+
         if (!credentials?.email || !credentials?.password) {
           console.log('❌ Missing email or password');
           return null;
@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-          
+
           if (!isPasswordValid) {
             console.log('❌ Invalid password');
             return null;
@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           console.log('✅ Backoffice login success for admin:', user.email);
-          
+
           return {
             id: user.id,
             email: user.email,
@@ -103,6 +103,74 @@ export const authOptions: NextAuthOptions = {
       }
     }),
     CredentialsProvider({
+      id: "google-mobile",
+      name: "Google Mobile",
+      credentials: {
+        idToken: { label: "ID Token", type: "text" }
+      },
+      async authorize(credentials) {
+        console.log('🔐 Google Mobile login attempt');
+
+        if (!credentials?.idToken) {
+          console.log('❌ Missing ID Token');
+          return null;
+        }
+
+        try {
+          // Initialize Firebase Admin if not already initialized
+          const admin = await import('firebase-admin');
+          if (admin.apps.length === 0) {
+            admin.initializeApp({
+              credential: admin.credential.cert({
+                projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+              }),
+            });
+          }
+
+          const decodedToken = await admin.auth().verifyIdToken(credentials.idToken);
+          const { email, name, picture, uid } = decodedToken;
+
+          if (!email) {
+            console.log('❌ No email in ID Token');
+            return null;
+          }
+
+          console.log('✅ Google Mobile token verified for:', email);
+
+          // Check if user exists
+          let user = await prisma.user.findUnique({
+            where: { email }
+          });
+
+          if (!user) {
+            console.log('🆕 Creating new user for Google Mobile login');
+            user = await prisma.user.create({
+              data: {
+                email,
+                name: name || 'User',
+                image: picture,
+                emailVerified: new Date(),
+              }
+            });
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role || 'user'
+          };
+
+        } catch (error) {
+          console.error('🚨 Google Mobile auth error:', error);
+          return null;
+        }
+      }
+    }),
+    CredentialsProvider({
       id: "phone-email",
       name: "Phone/Email",
       credentials: {
@@ -112,7 +180,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         console.log('🔍 Credentials provider called with:', credentials);
-        
+
         if (!credentials?.contact) {
           console.log('❌ Missing contact information');
           return null;
@@ -122,7 +190,7 @@ export const authOptions: NextAuthOptions = {
           console.log('🔎 Looking for user with contact:', credentials.contact);
           // Find user by phone or email - handle both old and new phone storage formats
           let user = null;
-          
+
           if (credentials.contact.includes('@')) {
             // Email lookup
             user = await prisma.user.findFirst({
@@ -130,12 +198,12 @@ export const authOptions: NextAuthOptions = {
             });
           } else {
             // Phone lookup - try multiple formats for compatibility
-            
+
             // First try: exact match (old format with full phone number)
             user = await prisma.user.findFirst({
               where: { phone: credentials.contact }
             });
-            
+
             // Second try: new format (country code + local phone separated)
             if (!user && credentials.contact.startsWith('+')) {
               // Use sophisticated parsing with countryCodes reference - same logic as verify-OTP
@@ -147,9 +215,9 @@ export const authOptions: NextAuthOptions = {
                 if (credentials.contact.startsWith(countryData.dialCode)) {
                   const countryCode = countryData.dialCode;
                   const localPhone = credentials.contact.slice(countryData.dialCode.length);
-                  
+
                   console.log('🔍 Trying authentication lookup:', { countryCode, localPhone });
-                  
+
                   user = await prisma.user.findFirst({
                     where: {
                       AND: [
@@ -158,7 +226,7 @@ export const authOptions: NextAuthOptions = {
                       ]
                     }
                   });
-                  
+
                   if (user) {
                     console.log('✅ Found user with separated phone format');
                     break;
@@ -167,7 +235,7 @@ export const authOptions: NextAuthOptions = {
               }
             }
           }
-          
+
           user = user as any;
 
           console.log('👤 Found user:', user ? 'Yes' : 'No');
@@ -186,8 +254,8 @@ export const authOptions: NextAuthOptions = {
           // Check if this is OTP verification (signup flow) or password login
           if (credentials.verified === "true" && !credentials.password) {
             // OTP verification flow - check if contact method is verified
-            const isVerified = credentials.contact.includes('@') 
-              ? user.emailVerified 
+            const isVerified = credentials.contact.includes('@')
+              ? user.emailVerified
               : user.phoneVerified;
 
             console.log('✅ OTP verification - User verification status:', isVerified ? 'Verified' : 'Not verified');
@@ -207,7 +275,7 @@ export const authOptions: NextAuthOptions = {
           } else if (credentials.password) {
             // Password login flow - validate password
             console.log('🔐 Password login attempt');
-            
+
             if (!user.password) {
               console.log('❌ User has no password set');
               return null;
@@ -218,8 +286,8 @@ export const authOptions: NextAuthOptions = {
 
             if (isPasswordValid) {
               // Also check if contact method is verified
-              const isVerified = credentials.contact.includes('@') 
-                ? user.emailVerified 
+              const isVerified = credentials.contact.includes('@')
+                ? user.emailVerified
                 : user.phoneVerified;
 
               if (isVerified) {
@@ -299,7 +367,7 @@ export const authOptions: NextAuthOptions = {
           user: user.email,
           name: user.name
         });
-        
+
         try {
           // Check if user exists in database
           const existingUser = await prisma.user.findUnique({
@@ -320,7 +388,7 @@ export const authOptions: NextAuthOptions = {
         } catch (error) {
           console.error('Error creating/checking user:', error);
         }
-        
+
         return true;
       }
       return true;
