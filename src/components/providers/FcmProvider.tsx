@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { Capacitor } from '@capacitor/core'
-import { PushNotifications } from '@capacitor/push-notifications'
 import { FirebaseMessaging } from '@capacitor-firebase/messaging'
 import { initializeApp, getApps } from 'firebase/app'
 import { getMessaging, getToken, onMessage } from 'firebase/messaging'
@@ -33,9 +32,9 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
     if (isCapacitor) {
       const registerNative = async () => {
         try {
-          const perm = await PushNotifications.requestPermissions()
+          const perm = await FirebaseMessaging.requestPermissions()
           if ((perm as any)?.receive !== 'granted') return
-          await PushNotifications.register()
+          // await PushNotifications.register() // Not needed for FirebaseMessaging plugin usually, or handled internally
           const fr = await FirebaseMessaging.getToken()
           const token = (fr as any)?.token as string
           if (!token) return
@@ -54,7 +53,7 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
             body: JSON.stringify({ userId, token, platform: Capacitor.getPlatform() }),
           })
           if (!r.ok) {
-            try { console.error('Failed to register FCM token', await r.text()) } catch {}
+            try { console.error('Failed to register FCM token', await r.text()) } catch { }
           }
           FirebaseMessaging.addListener('tokenReceived', async (ev: any) => {
             try {
@@ -66,12 +65,15 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
                 body: JSON.stringify({ userId, token: nt, platform: Capacitor.getPlatform() }),
               })
               if (!resp.ok) {
-                try { console.error('Failed to refresh FCM token', await resp.text()) } catch {}
+                try { console.error('Failed to refresh FCM token', await resp.text()) } catch { }
               }
-            } catch (e) {}
+            } catch (e) { }
           })
-          PushNotifications.addListener('registrationError', (err) => {
-            try { console.error('Push registration error', err) } catch {}
+          await FirebaseMessaging.addListener('notificationReceived', (event) => {
+            console.log('FCM notification received:', event)
+          })
+          await FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
+            console.log('FCM notification action performed:', event)
           })
         } catch (e) {
           console.error('FCM native registration error', e)
@@ -107,17 +109,17 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
 
         const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js')
         const readyReg = await navigator.serviceWorker.ready
-        ;(readyReg.active || swReg.active)?.postMessage({
-          type: 'SET_FIREBASE_CONFIG',
-          config: {
-            apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
-            authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN as string,
-            projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID as string,
-            storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET as string,
-            messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID as string,
-            appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID as string,
-          },
-        })
+          ; (readyReg.active || swReg.active)?.postMessage({
+            type: 'SET_FIREBASE_CONFIG',
+            config: {
+              apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY as string,
+              authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN as string,
+              projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID as string,
+              storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET as string,
+              messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID as string,
+              appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID as string,
+            },
+          })
         const token = await getToken(messaging!, {
           vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY as string,
           serviceWorkerRegistration: swReg,
