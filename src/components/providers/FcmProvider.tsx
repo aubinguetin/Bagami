@@ -1,6 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Capacitor } from '@capacitor/core'
+import { PushNotifications } from '@capacitor/push-notifications'
+import { FirebaseMessaging } from '@capacitor-firebase/messaging'
 import { initializeApp, getApps } from 'firebase/app'
 import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { useQueryClient } from '@tanstack/react-query'
@@ -23,8 +26,71 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
   const { data: session, status } = useSession()
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    const isCapacitor = Capacitor.getPlatform() !== 'web'
+    const hasSW = 'serviceWorker' in navigator
+    const hasNotification = 'Notification' in window
+    if (isCapacitor) {
+      const registerNative = async () => {
+        try {
+          const perm = await PushNotifications.requestPermissions()
+          if ((perm as any)?.receive !== 'granted') return
+          await PushNotifications.register()
+          const fr = await FirebaseMessaging.getToken()
+          const token = (fr as any)?.token as string
+          if (!token) return
+          let userId = (session?.user?.id) || (typeof window !== 'undefined' ? (localStorage.getItem('bagami_user_id') || '') : '')
+          if (!userId) {
+            for (let i = 0; i < 5; i++) {
+              await new Promise(r => setTimeout(r, 500))
+              userId = (session?.user?.id) || (typeof window !== 'undefined' ? (localStorage.getItem('bagami_user_id') || '') : '')
+              if (userId) break
+            }
+            if (!userId) return
+          }
+          const r = await fetch('/api/notifications/register-fcm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, token, platform: Capacitor.getPlatform() }),
+          })
+          if (!r.ok) {
+            try { console.error('Failed to register FCM token', await r.text()) } catch {}
+          }
+          FirebaseMessaging.addListener('tokenReceived', async (ev: any) => {
+            try {
+              const nt = ev?.token as string
+              if (!nt) return
+              const resp = await fetch('/api/notifications/register-fcm', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, token: nt, platform: Capacitor.getPlatform() }),
+              })
+              if (!resp.ok) {
+                try { console.error('Failed to refresh FCM token', await resp.text()) } catch {}
+              }
+            } catch (e) {}
+          })
+          PushNotifications.addListener('registrationError', (err) => {
+            try { console.error('Push registration error', err) } catch {}
+          })
+        } catch (e) {
+          console.error('FCM native registration error', e)
+        }
+      }
+      registerNative()
+      return
+    }
+    if (!hasSW || !hasNotification) {
+      return
+    }
+
     const app = initFirebase()
-    const messaging = getMessaging(app)
+    let messaging: ReturnType<typeof getMessaging> | null = null
+    try {
+      messaging = getMessaging(app)
+    } catch (err) {
+      return
+    }
 
     const register = async () => {
       try {
@@ -52,7 +118,7 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
             appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID as string,
           },
         })
-        const token = await getToken(messaging, {
+        const token = await getToken(messaging!, {
           vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY as string,
           serviceWorkerRegistration: swReg,
         })
@@ -85,7 +151,7 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
 
     register()
 
-    onMessage(messaging, payload => {
+    onMessage(messaging!, payload => {
       try {
         console.log('FCM foreground message:', payload)
         const event = new CustomEvent('bagami-notification', { detail: payload })

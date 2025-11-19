@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.bagami.app',
   appName: 'bagami',
    server: {
-    url:"https://ccca3e83a727.ngrok-free.app",
+    url:"https://b6bdd2d08b7a.ngrok-free.app/",
     cleartext: true,
     androidScheme: "https",
     iosScheme: "https",

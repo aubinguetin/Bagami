@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "679781905090",
+    "project_id": "bagami-a3974",
+    "storage_bucket": "bagami-a3974.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679781905090:android:d68c4b0d3358cbf342c15b",
+        "android_client_info": {
+          "package_name": "com.bagami.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679781905090-gik55c79ooptl4q4ontkdni95amgupnn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASx2HrgRH6r74-UDiXZCmF5wjliy1UFag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679781905090-gik55c79ooptl4q4ontkdni95amgupnn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
