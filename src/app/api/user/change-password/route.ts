@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { getUserLocale, generatePasswordChangeNotification } from '@/lib/notificationTranslations'
+import { sendNotificationToUser } from '@/lib/push/fcm'
 
 // POST /api/user/change-password
 export async function POST(req: Request) {
@@ -74,6 +75,7 @@ export async function POST(req: Request) {
           isRead: false
         }
       });
+      await sendNotificationToUser({ userId: user.id, title, body: message, data: { link: '/profile' } })
     } catch (error) {
       console.error('Failed to create password change notification:', error);
     }

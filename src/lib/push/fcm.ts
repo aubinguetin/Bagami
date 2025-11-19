@@ -26,9 +26,9 @@ export async function sendNotificationToUser(params: {
   data?: Record<string, string>
 }) {
   ensureInitialized()
-  const tokens: { token: string }[] = await prisma.fcmToken.findMany({
+  const tokens = await prisma.fcmToken.findMany({
     where: { userId: params.userId, isActive: true },
-    select: { token: true },
+    select: { id: true, token: true, platform: true },
   })
 
   if (tokens.length === 0) return { success: false, sent: 0 }
@@ -48,9 +48,35 @@ export async function sendNotificationToUser(params: {
   }
 
   const response = await messaging.sendEachForMulticast({
-    tokens: tokens.map((t: { token: string }) => t.token),
+    tokens: tokens.map((t) => t.token),
     ...payload,
   })
+
+  // Deactivate invalid tokens (not registered/invalid)
+  try {
+    const toDeactivateIds: string[] = []
+    response.responses.forEach((r, idx) => {
+      if (!r.success) {
+        const code = (r.error && (r.error as any).code) || ''
+        if (
+          code === 'messaging/registration-token-not-registered' ||
+          code === 'messaging/invalid-registration-token' ||
+          code === 'messaging/invalid-argument'
+        ) {
+          const tokenRecord = tokens[idx]
+          if (tokenRecord?.id) toDeactivateIds.push(tokenRecord.id)
+        }
+      }
+    })
+    if (toDeactivateIds.length > 0) {
+      await prisma.fcmToken.updateMany({
+        where: { id: { in: toDeactivateIds } },
+        data: { isActive: false },
+      })
+    }
+  } catch (cleanupError) {
+    console.error('FCM token cleanup error', cleanupError)
+  }
 
   return { success: true, sent: response.successCount }
 }

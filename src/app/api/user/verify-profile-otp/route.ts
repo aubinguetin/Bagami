@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { OTPStorage } from '@/services/smsService';
 import { prisma } from '@/lib/prisma';
 import { getUserLocale, generateProfileUpdateNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 // Email validation function
 function isValidEmail(email: string): boolean {
@@ -115,6 +116,7 @@ export async function POST(request: NextRequest) {
               isRead: false
             }
           });
+          await sendNotificationToUser({ userId, title, body: message, data: { link: '/profile' } })
           console.log('✅ Email update notification created');
         } catch (notifError) {
           console.error('⚠️ Failed to create email update notification:', notifError);
@@ -216,6 +218,7 @@ export async function POST(request: NextRequest) {
               isRead: false
             }
           });
+          await sendNotificationToUser({ userId, title, body: message, data: { link: '/profile' } })
           console.log('✅ Phone update notification created');
         } catch (notifError) {
           console.error('⚠️ Failed to create phone update notification:', notifError);

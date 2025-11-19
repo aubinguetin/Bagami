@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { getUserLocale, generateProfileUpdateNotification } from '@/lib/notificationTranslations';
+import { sendNotificationToUser } from '@/lib/push/fcm';
 
 export async function GET(request: NextRequest) {
   try {
@@ -182,6 +183,7 @@ export async function PATCH(request: NextRequest) {
             isRead: false
           }
         });
+        await sendNotificationToUser({ userId: session.user.id, title, body: message, data: { link: '/profile' } })
       }
     } catch (error) {
       console.error('Failed to create profile update notification:', error);
