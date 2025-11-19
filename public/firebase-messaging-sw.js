@@ -1,24 +1,25 @@
 importScripts('https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js')
 importScripts('https://www.gstatic.com/firebasejs/9.6.11/firebase-messaging-compat.js')
 
-const firebaseConfig = {
-  apiKey: self.FIREBASE_API_KEY || '',
-  authDomain: self.FIREBASE_AUTH_DOMAIN || '',
-  projectId: self.FIREBASE_PROJECT_ID || '',
-  storageBucket: self.FIREBASE_STORAGE_BUCKET || '',
-  messagingSenderId: self.FIREBASE_MESSAGING_SENDER_ID || '',
-  appId: self.FIREBASE_APP_ID || '',
-}
+let messaging = null
 
-firebase.initializeApp(firebaseConfig)
-const messaging = firebase.messaging()
-
-messaging.onBackgroundMessage(payload => {
-  const title = payload.notification?.title || 'Bagami'
-  const body = payload.notification?.body || ''
-  const data = payload.data || {}
-  const options = { body, data }
-  self.registration.showNotification(title, options)
+self.addEventListener('message', (event) => {
+  const data = event.data || {}
+  if (data.type === 'SET_FIREBASE_CONFIG' && data.config) {
+    try {
+      firebase.initializeApp(data.config)
+      messaging = firebase.messaging()
+      messaging.onBackgroundMessage((payload) => {
+        const title = payload.notification?.title || payload.data?.title || 'Bagami'
+        const body = payload.notification?.body || payload.data?.body || ''
+        const nd = payload.data || {}
+        const options = { body, data: nd }
+        self.registration.showNotification(title, options)
+      })
+    } catch (e) {
+      // noop
+    }
+  }
 })
 
 self.addEventListener('notificationclick', event => {

@@ -5,6 +5,7 @@ import NextAuthProvider from '@/components/providers/NextAuthProvider'
 import QueryProvider from '@/components/providers/QueryProvider'
 import { TranslationProvider } from '@/components/providers/TranslationProvider'
 import FcmProvider from '@/components/providers/FcmProvider'
+import ToastProvider from '@/components/providers/ToastProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,7 +26,9 @@ export default function RootLayout({
           <NextAuthProvider>
             <QueryProvider>
               <FcmProvider>
-                {children}
+                <ToastProvider>
+                  {children}
+                </ToastProvider>
               </FcmProvider>
             </QueryProvider>
           </NextAuthProvider>
