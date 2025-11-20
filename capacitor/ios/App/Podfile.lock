@@ -2,15 +2,35 @@ PODS:
   - Capacitor (6.2.1):
     - CapacitorCordova
   - CapacitorCordova (6.2.1)
+  - CapacitorFirebaseAuthentication (6.3.1):
+    - Capacitor
+    - CapacitorFirebaseAuthentication/Lite (= 6.3.1)
+    - FirebaseAuth (~> 11.0)
+  - CapacitorFirebaseAuthentication/Lite (6.3.1):
+    - Capacitor
+    - FirebaseAuth (~> 11.0)
   - CapacitorFirebaseMessaging (6.3.1):
     - Capacitor
     - FirebaseMessaging (~> 11.0)
   - CapacitorPushNotifications (6.0.4):
     - Capacitor
+  - FirebaseAppCheckInterop (11.14.0)
+  - FirebaseAuth (11.14.0):
+    - FirebaseAppCheckInterop (~> 11.0)
+    - FirebaseAuthInterop (~> 11.0)
+    - FirebaseCore (~> 11.14.0)
+    - FirebaseCoreExtension (~> 11.14.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GTMSessionFetcher/Core (< 5.0, >= 3.4)
+    - RecaptchaInterop (~> 101.0)
+  - FirebaseAuthInterop (11.14.0)
   - FirebaseCore (11.14.0):
     - FirebaseCoreInternal (~> 11.14.0)
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/Logger (~> 8.1)
+  - FirebaseCoreExtension (11.14.0):
+    - FirebaseCore (~> 11.14.0)
   - FirebaseCoreInternal (11.14.0):
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
   - FirebaseInstallations (11.14.0):
@@ -54,35 +74,46 @@ PODS:
   - GoogleUtilities/UserDefaults (8.1.0):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
+  - GTMSessionFetcher/Core (4.5.0)
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
   - PromisesObjC (2.4.0)
+  - RecaptchaInterop (101.0.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorFirebaseAuthentication (from `../../node_modules/@capacitor-firebase/authentication`)"
   - "CapacitorFirebaseMessaging (from `../../node_modules/@capacitor-firebase/messaging`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
 
 SPEC REPOS:
   trunk:
+    - FirebaseAppCheckInterop
+    - FirebaseAuth
+    - FirebaseAuthInterop
     - FirebaseCore
+    - FirebaseCoreExtension
     - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
     - GoogleDataTransport
     - GoogleUtilities
+    - GTMSessionFetcher
     - nanopb
     - PromisesObjC
+    - RecaptchaInterop
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorFirebaseAuthentication:
+    :path: "../../node_modules/@capacitor-firebase/authentication"
   CapacitorFirebaseMessaging:
     :path: "../../node_modules/@capacitor-firebase/messaging"
   CapacitorPushNotifications:
@@ -91,17 +122,24 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 1e0d0e7330dea9f983b50da737d8918abcf273f8
   CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
+  CapacitorFirebaseAuthentication: 78d8e398050d7c2012ee102cebfbbe01e99d8938
   CapacitorFirebaseMessaging: 3b4ff762b42ad3137c911a96ec06bf8bfd6fb122
   CapacitorPushNotifications: 1fc22ae360214a0ac0625c348d3aea217085163d
+  FirebaseAppCheckInterop: a92ba81d0ee3c4cddb1a2e52c668ea51dc63c3ae
+  FirebaseAuth: 657b7e792d60e9fdb87408ae5ed15f4438442c1d
+  FirebaseAuthInterop: e25b58ecb90f3285085fa2118861a3c9dfdc62ad
   FirebaseCore: 8fb12caed934c900218ce66a419107db74214ade
+  FirebaseCoreExtension: 6af88594f639c1abb127bc096da32cf2c0dd69ff
   FirebaseCoreInternal: 6a3b668197644aa858fc4127578637c6767ba123
   FirebaseInstallations: 863f2846bb124331b501d29c0f17f95caa2ef6bb
   FirebaseMessaging: 61404edd221eaa09f9a733ce0fc9885f286705fe
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
+  GTMSessionFetcher: fc75fc972958dceedee61cb662ae1da7a83a91cf
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
 
-PODFILE CHECKSUM: 257890d53b50e1e222218c269285280d0aceda78
+PODFILE CHECKSUM: 0dbd56646dd11b9faaca4f4150f7a4ed58906d92
 
 COCOAPODS: 1.15.2
