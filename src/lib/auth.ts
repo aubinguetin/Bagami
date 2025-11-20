@@ -171,6 +171,74 @@ export const authOptions: NextAuthOptions = {
       }
     }),
     CredentialsProvider({
+      id: "facebook-mobile",
+      name: "Facebook Mobile",
+      credentials: {
+        idToken: { label: "ID Token", type: "text" }
+      },
+      async authorize(credentials) {
+        console.log('🔐 Facebook Mobile login attempt');
+
+        if (!credentials?.idToken) {
+          console.log('❌ Missing ID Token');
+          return null;
+        }
+
+        try {
+          // Initialize Firebase Admin if not already initialized
+          const admin = await import('firebase-admin');
+          if (admin.apps.length === 0) {
+            admin.initializeApp({
+              credential: admin.credential.cert({
+                projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+              }),
+            });
+          }
+
+          const decodedToken = await admin.auth().verifyIdToken(credentials.idToken);
+          const { email, name, picture, uid } = decodedToken;
+
+          if (!email) {
+            console.log('❌ No email in ID Token');
+            return null;
+          }
+
+          console.log('✅ Facebook Mobile token verified for:', email);
+
+          // Check if user exists
+          let user = await prisma.user.findUnique({
+            where: { email }
+          });
+
+          if (!user) {
+            console.log('🆕 Creating new user for Facebook Mobile login');
+            user = await prisma.user.create({
+              data: {
+                email,
+                name: name || 'User',
+                image: picture,
+                emailVerified: new Date(),
+              }
+            });
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role || 'user'
+          };
+
+        } catch (error) {
+          console.error('🚨 Facebook Mobile auth error:', error);
+          return null;
+        }
+      }
+    }),
+    CredentialsProvider({
       id: "phone-email",
       name: "Phone/Email",
       credentials: {

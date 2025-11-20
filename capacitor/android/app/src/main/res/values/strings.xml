@@ -5,4 +5,6 @@
     <string name="package_name">com.bagami.app</string>
     <string name="custom_url_scheme">com.bagami.app</string>
     <string name="default_web_client_id">679781905090-gik55c79ooptl4q4ontkdni95amgupnn.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">2895373604003219</string>
+    <string name="facebook_client_token">4831c7b65c214eb6af5bc82d4b0503fc</string>
 </resources>
