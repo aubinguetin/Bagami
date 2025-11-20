@@ -56,14 +56,61 @@ A modern business application with authentication built using Next.js, React, an
 
 ### Available Scripts
 
-- \`npm run dev\` - Start development server
-- \`npm run build\` - Build for production
-- \`npm run start\` - Start production server
-- \`npm run lint\` - Run ESLint
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+
+## Mobile Development (Capacitor)
+
+### Prerequisites
+- Android Studio (for Android)
+- Xcode (for iOS, macOS only)
+- Capacitor CLI (installed locally)
+
+### Syncing
+After installing new dependencies or building the web app, sync the native projects:
+```bash
+npm run build
+npx cap sync
+```
+
+### Running on Android
+To open the project in Android Studio:
+```bash
+npx cap open android
+```
+Or to run directly on a connected device/emulator:
+```bash
+npx cap run android
+```
+
+### Running on iOS
+To open the project in Xcode:
+```bash
+npx cap open ios
+```
+Or to run directly on a connected device/simulator:
+```bash
+npx cap run ios
+```
+
+### Live Reload
+To enable live reload during development:
+1. Ensure your device is on the same network as your computer, or use a tunnel like `ngrok`.
+2. Update `capacitor.config.ts`:
+   ```typescript
+   server: {
+     url: "http://YOUR_LOCAL_IP:3000", // or your ngrok URL
+     cleartext: true
+   }
+   ```
+3. Run the native app. It will load the content from the specified URL.
+
 
 ## Project Structure
 
-\`\`\`
+```
 src/
 ├── app/
 │   ├── auth/           # Authentication pages

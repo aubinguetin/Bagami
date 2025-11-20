@@ -25,12 +25,28 @@ export default function GoogleSignInButton({
 
       if (Capacitor.isNativePlatform()) {
         const result = await FirebaseAuthentication.signInWithGoogle();
-        if (result.credential?.idToken) {
-          await signIn('google-mobile', {
-            idToken: result.credential.idToken,
-            callbackUrl: '/deliveries',
-            redirect: true,
-          });
+        if (result.user) {
+          // Get the Firebase ID token (not the Google ID token)
+          const tokenResult = await FirebaseAuthentication.getIdToken();
+
+          if (tokenResult.token) {
+            const signInResult = await signIn('google-mobile', {
+              idToken: tokenResult.token,
+              callbackUrl: '/deliveries',
+              redirect: false,
+            });
+
+            console.log('📱 Google Mobile SignIn Result:', signInResult);
+
+            if (signInResult?.ok) {
+              console.log('✅ SignIn successful, redirecting to /deliveries');
+              window.location.href = '/deliveries';
+            } else {
+              console.error('❌ SignIn failed:', signInResult?.error);
+              // Optional: Show error to user
+              alert(`Login failed: ${signInResult?.error}`);
+            }
+          }
         }
       } else {
         await signIn('google', {

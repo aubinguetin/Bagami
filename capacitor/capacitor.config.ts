@@ -3,8 +3,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.bagami.app',
   appName: 'bagami',
-   server: {
-    url:"https://b6bdd2d08b7a.ngrok-free.app/",
+  server: {
+    url: "https://67f0fc171f9d.ngrok-free.app",
     cleartext: true,
     androidScheme: "https",
     iosScheme: "https",
@@ -14,10 +14,14 @@ const config: CapacitorConfig = {
       "*",
     ],
   },
- 
+
   plugins: {
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],
+    },
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ["google.com"],
     },
   },
 };
