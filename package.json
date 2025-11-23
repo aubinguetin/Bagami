@@ -4,7 +4,7 @@
   "description": "Bagami - Business Application",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev -p 8080 -H localhost",
+    "dev": "next dev -p 8080 -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
-    "@capacitor-firebase/authentication": "^6.3.1",
-    "@capacitor-firebase/messaging": "^6.0.0",
-    "@capacitor/core": "^6.1.0",
-    "@capacitor/push-notifications": "^6.0.0",
+    "@capacitor-firebase/authentication": "^7.4.0",
+    "@capacitor-firebase/messaging": "^7.4.0",
+    "@capacitor/core": "^7.4.4",
+    "@capacitor/push-notifications": "^7.0.3",
     "@hookform/resolvers": "^3.1.0",
     "@prisma/client": "^5.22.0",
     "@tanstack/react-query": "^5.90.2",

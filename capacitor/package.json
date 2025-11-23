@@ -11,15 +11,15 @@
     "open:android": "npx cap open android"
   },
   "dependencies": {
-    "@capacitor-firebase/authentication": "^6.3.1",
-    "@capacitor-firebase/messaging": "^6.0.0",
-    "@capacitor/core": "^6.1.0",
-    "@capacitor/push-notifications": "^6.0.0"
+    "@capacitor-firebase/authentication": "^7.4.0",
+    "@capacitor-firebase/messaging": "^7.4.0",
+    "@capacitor/core": "^7.4.4",
+    "@capacitor/push-notifications": "^7.0.3"
   },
   "devDependencies": {
-    "@capacitor/android": "^6.1.0",
-    "@capacitor/cli": "^6.1.0",
-    "@capacitor/ios": "^6.1.0",
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/ios": "^7.4.4",
     "dotenv": "^16.4.5",
     "typescript": "^5.1.0"
   }
