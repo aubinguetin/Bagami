@@ -20,7 +20,12 @@ target 'App' do
   capacitor_pods
   # Add your Pods here
   pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'
-  # pod 'CapacitorFirebaseAuthentication', :path => '../../node_modules/@capacitor-firebase/authentication'
+  pod 'CapacitorFirebaseAuthentication/Facebook', :path => '../../node_modules/@capacitor-firebase/authentication'
+  
+  # Native Firebase Pods
+  pod 'Firebase/Messaging', '~> 11.7.0'
+  pod 'Firebase/Analytics', '~> 11.7.0'
+  
   # Rely on plugin dependencies; do not pin GoogleSignIn or Firebase/Messaging here to avoid conflicts
 end
 
