@@ -5,24 +5,24 @@ PODS:
   - AppAuth/Core (1.7.6)
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
-  - Capacitor (7.4.4):
+  - Capacitor (6.2.1):
     - CapacitorCordova
-  - CapacitorCordova (7.4.4)
-  - CapacitorFirebaseAuthentication (7.4.0):
+  - CapacitorCordova (6.2.1)
+  - CapacitorFirebaseAuthentication (6.3.1):
     - Capacitor
-    - CapacitorFirebaseAuthentication/Lite (= 7.4.0)
-    - FirebaseAuth (~> 11.7.0)
-  - CapacitorFirebaseAuthentication/Google (7.4.0):
+    - CapacitorFirebaseAuthentication/Lite (= 6.3.1)
+    - FirebaseAuth (~> 11.0)
+  - CapacitorFirebaseAuthentication/Google (6.3.1):
     - Capacitor
-    - FirebaseAuth (~> 11.7.0)
+    - FirebaseAuth (~> 11.0)
     - GoogleSignIn (= 7.1.0)
-  - CapacitorFirebaseAuthentication/Lite (7.4.0):
+  - CapacitorFirebaseAuthentication/Lite (6.3.1):
     - Capacitor
-    - FirebaseAuth (~> 11.7.0)
-  - CapacitorFirebaseMessaging (7.4.0):
+    - FirebaseAuth (~> 11.0)
+  - CapacitorFirebaseMessaging (6.3.1):
     - Capacitor
-    - FirebaseMessaging (~> 11.7.0)
-  - CapacitorPushNotifications (7.0.3):
+    - FirebaseMessaging (~> 11.0)
+  - CapacitorPushNotifications (6.0.4):
     - Capacitor
   - FirebaseAppCheckInterop (11.15.0)
   - FirebaseAuth (11.7.0):
@@ -142,11 +142,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
-  Capacitor: 09d9ff8e9618e8c4b3cab2bbee34a17215dd2fef
-  CapacitorCordova: bf648a636f3c153f652d312ae145fb508b6ffced
-  CapacitorFirebaseAuthentication: 3d0a776b7dbf39351799c144b30253468ece6495
-  CapacitorFirebaseMessaging: 9cac5fc77994801e2b87a61f7b2a5f8efc0da33a
-  CapacitorPushNotifications: 729ade0d2791ec1969feaf931a15e28d929a6d70
+  Capacitor: 1e0d0e7330dea9f983b50da737d8918abcf273f8
+  CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
+  CapacitorFirebaseAuthentication: 78d8e398050d7c2012ee102cebfbbe01e99d8938
+  CapacitorFirebaseMessaging: 3b4ff762b42ad3137c911a96ec06bf8bfd6fb122
+  CapacitorPushNotifications: 1fc22ae360214a0ac0625c348d3aea217085163d
   FirebaseAppCheckInterop: 06fe5a3799278ae4667e6c432edd86b1030fa3df
   FirebaseAuth: 77e25aa24f3e1c626c5babd3338551fc1669ee0e
   FirebaseAuthInterop: 7087d7a4ee4bc4de019b2d0c240974ed5d89e2fd
@@ -166,4 +166,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 594322bcc6d876b9e587afb3651b8fc4be54cc8c
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2
