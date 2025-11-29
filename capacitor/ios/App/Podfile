@@ -22,6 +22,10 @@ target 'App' do
   pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'
   pod 'CapacitorFirebaseAuthentication/Facebook', :path => '../../node_modules/@capacitor-firebase/authentication'
   
+  # Pin Facebook SDK to 17.0.2 to match Android and avoid Firebase token issues
+  pod 'FBSDKCoreKit', '17.0.2'
+  pod 'FBSDKLoginKit', '17.0.2'
+  
   # Native Firebase Pods
   pod 'Firebase/Messaging', '~> 11.7.0'
   pod 'Firebase/Analytics', '~> 11.7.0'

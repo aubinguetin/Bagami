@@ -22,7 +22,11 @@ export default function FacebookSignInButton({
     try {
       setIsLoading(true);
       if (Capacitor.isNativePlatform()) {
-        const result = await FirebaseAuthentication.signInWithFacebook();
+        console.log('🔵 Starting Facebook Login with Limited Login mode...');
+        const result = await FirebaseAuthentication.signInWithFacebook({
+          mode: 'limited', // For Android if applicable, though mainly for iOS
+          useLimitedLogin: true // Explicitly use Limited Login for iOS
+        } as any); // Type cast might be needed if types aren't perfectly updated in the project
         if (result.user) {
           // Get the Firebase ID token
           const tokenResult = await FirebaseAuthentication.getIdToken();

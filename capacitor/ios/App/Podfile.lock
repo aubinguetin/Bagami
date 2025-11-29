@@ -5,33 +5,38 @@ PODS:
   - AppAuth/Core (1.7.6)
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
-  - Capacitor (6.2.1):
+  - Capacitor (7.4.4):
     - CapacitorCordova
-  - CapacitorCordova (6.2.1)
-  - CapacitorFirebaseAuthentication (6.3.1):
+  - CapacitorCordova (7.4.4)
+  - CapacitorFirebaseAuthentication (7.4.0):
     - Capacitor
-    - CapacitorFirebaseAuthentication/Lite (= 6.3.1)
-    - FirebaseAuth (~> 11.0)
-  - CapacitorFirebaseAuthentication/Google (6.3.1):
+    - CapacitorFirebaseAuthentication/Lite (= 7.4.0)
+    - FirebaseAuth (~> 11.7.0)
+  - CapacitorFirebaseAuthentication/Facebook (7.4.0):
     - Capacitor
-    - FirebaseAuth (~> 11.0)
+    - FBSDKCoreKit (= 17.0.2)
+    - FBSDKLoginKit (= 17.0.2)
+    - FirebaseAuth (~> 11.7.0)
+  - CapacitorFirebaseAuthentication/Google (7.4.0):
+    - Capacitor
+    - FirebaseAuth (~> 11.7.0)
     - GoogleSignIn (= 7.1.0)
-  - CapacitorFirebaseAuthentication/Lite (6.3.1):
+  - CapacitorFirebaseAuthentication/Lite (7.4.0):
     - Capacitor
-    - FirebaseAuth (~> 11.0)
-  - CapacitorFirebaseMessaging (6.3.1):
+    - FirebaseAuth (~> 11.7.0)
+  - CapacitorFirebaseMessaging (7.4.0):
     - Capacitor
-    - FirebaseMessaging (~> 11.0)
-  - CapacitorPushNotifications (6.0.4):
+    - FirebaseMessaging (~> 11.7.0)
+  - CapacitorPushNotifications (7.0.3):
     - Capacitor
-  - FBAEMKit (18.0.0):
-    - FBSDKCoreKit_Basics (= 18.0.0)
-  - FBSDKCoreKit (18.0.0):
-    - FBAEMKit (= 18.0.0)
-    - FBSDKCoreKit_Basics (= 18.0.0)
-  - FBSDKCoreKit_Basics (18.0.0)
-  - FBSDKLoginKit (18.0.0):
-    - FBSDKCoreKit (= 18.0.0)
+  - FBAEMKit (17.0.2):
+    - FBSDKCoreKit_Basics (= 17.0.2)
+  - FBSDKCoreKit (17.0.2):
+    - FBAEMKit (= 17.0.2)
+    - FBSDKCoreKit_Basics (= 17.0.2)
+  - FBSDKCoreKit_Basics (17.0.2)
+  - FBSDKLoginKit (17.0.2):
+    - FBSDKCoreKit (= 17.0.2)
   - Firebase/Analytics (11.7.0):
     - Firebase/Core
   - Firebase/Core (11.7.0):
@@ -167,6 +172,8 @@ DEPENDENCIES:
   - "CapacitorFirebaseAuthentication/Google (from `../../node_modules/@capacitor-firebase/authentication`)"
   - "CapacitorFirebaseMessaging (from `../../node_modules/@capacitor-firebase/messaging`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
+  - FBSDKCoreKit (= 17.0.2)
+  - FBSDKLoginKit (= 17.0.2)
   - Firebase/Analytics (~> 11.7.0)
   - Firebase/Messaging (~> 11.7.0)
 
@@ -211,11 +218,17 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
-  Capacitor: 1e0d0e7330dea9f983b50da737d8918abcf273f8
-  CapacitorCordova: 8d93e14982f440181be7304aa9559ca631d77fff
-  CapacitorFirebaseAuthentication: 78d8e398050d7c2012ee102cebfbbe01e99d8938
-  CapacitorFirebaseMessaging: 3b4ff762b42ad3137c911a96ec06bf8bfd6fb122
-  CapacitorPushNotifications: 1fc22ae360214a0ac0625c348d3aea217085163d
+  Capacitor: 09d9ff8e9618e8c4b3cab2bbee34a17215dd2fef
+  CapacitorCordova: bf648a636f3c153f652d312ae145fb508b6ffced
+  CapacitorFirebaseAuthentication: 7daafed1386ea032bf33e244fff5d076645e3e7b
+  CapacitorFirebaseMessaging: 9cac5fc77994801e2b87a61f7b2a5f8efc0da33a
+  CapacitorPushNotifications: 729ade0d2791ec1969feaf931a15e28d929a6d70
+  FBAEMKit: 619f96ea65427e8afca240d5b0f4703738dfdf5c
+  FBSDKCoreKit: a5f384db2e9ee84e98494fed8f983d2bd79accff
+  FBSDKCoreKit_Basics: d35c775aaf243a2d731dfae7be3a74b1987285ab
+  FBSDKLoginKit: f8ca5f7ab7c4e5b93e729d94975b0db7fcc511ed
+  Firebase: a64bf6a8546e6eab54f1c715cd6151f39d2329f4
+  FirebaseAnalytics: bc9e565af9044ba8d6c6e4157e4edca8e5fdf7ec
   FirebaseAppCheckInterop: 06fe5a3799278ae4667e6c432edd86b1030fa3df
   FirebaseAuth: 77e25aa24f3e1c626c5babd3338551fc1669ee0e
   FirebaseAuthInterop: 7087d7a4ee4bc4de019b2d0c240974ed5d89e2fd
@@ -234,6 +247,6 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: 20dcff85093135c4719714f9d89a55554ec3c584
+PODFILE CHECKSUM: 11de79b36b61a28cb3473ef4a786b99e1ad78f3f
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
