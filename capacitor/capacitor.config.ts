@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.bagami.app',
   appName: 'bagami',
   server: {
-    url: "http://192.168.213.133:8080",
+    url: "https://bagami-zclb.onrender.com",
     cleartext: true,
     androidScheme: "https",
     iosScheme: "http",
