@@ -14,21 +14,17 @@ function getNotificationTranslations(locale: Locale = 'en') {
 /**
  * Get user's preferred locale from database
  * Falls back to 'en' if not found
- * TODO: Add locale column to User table
  */
 export async function getUserLocale(userId: string): Promise<Locale> {
   try {
-    // For now, default to 'en' until we add locale column to User table
-    // TODO: Uncomment when locale column is added
-    /*
     const { prisma } = await import('@/lib/prisma');
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { locale: true }
+      select: { language: true }
     });
-    
-    return (user?.locale as Locale) || 'en';
-    */
+
+    const lang = user?.language?.toLowerCase();
+    if (lang === 'fr') return 'fr';
     return 'en';
   } catch (error) {
     console.error('Error fetching user locale:', error);
@@ -48,13 +44,13 @@ export function generateAlertMatchNotification(
   locale: Locale = 'en'
 ) {
   const t = getNotificationTranslations(locale);
-  
-  const title = deliveryType === 'request' 
-    ? t.alertMatch.requestTitle 
+
+  const title = deliveryType === 'request'
+    ? t.alertMatch.requestTitle
     : t.alertMatch.offerTitle;
-  
+
   const message = `${fromCity}, ${fromCountry} → ${toCity}, ${toCountry}`;
-  
+
   return { title, message };
 }
 
@@ -71,10 +67,10 @@ export function generateTransactionNotification(
 ) {
   const t = getNotificationTranslations(locale);
   const formattedAmount = new Intl.NumberFormat('fr-FR').format(amount);
-  
+
   let title = '';
   let message = '';
-  
+
   if (type === 'credit') {
     switch (category) {
       case 'Bonus':
@@ -118,7 +114,7 @@ export function generateTransactionNotification(
         message = `${description} - ${formattedAmount} ${currency}`;
     }
   }
-  
+
   return { title, message };
 }
 
@@ -135,10 +131,10 @@ export function generateDirectPaymentNotification(
 ) {
   const t = getNotificationTranslations(locale);
   const formattedAmount = new Intl.NumberFormat('fr-FR').format(amount);
-  
+
   let title = '';
   let message = '';
-  
+
   if (type === 'debit') {
     if (category === 'Delivery Payment' || metadata?.paymentType === 'direct_payment') {
       title = t.transaction.directPaymentCompleted;
@@ -151,7 +147,7 @@ export function generateDirectPaymentNotification(
     title = t.transaction.paymentReceived;
     message = `${description} - ${formattedAmount} XOF`;
   }
-  
+
   return { title, message };
 }
 
@@ -166,17 +162,17 @@ export function generateReviewNotification(
 ) {
   const t = getNotificationTranslations(locale);
   const stars = '⭐'.repeat(rating);
-  
+
   const title = `${stars} ${t.review.title}`;
   const message = comment
     ? t.review.withComment
-        .replace('{name}', reviewerName)
-        .replace('{rating}', `${rating}`)
-        .replace('{comment}', comment)
+      .replace('{name}', reviewerName)
+      .replace('{rating}', `${rating}`)
+      .replace('{comment}', comment)
     : t.review.withoutComment
-        .replace('{name}', reviewerName)
-        .replace('{rating}', `${rating}`);
-  
+      .replace('{name}', reviewerName)
+      .replace('{rating}', `${rating}`);
+
   return { title, message };
 }
 
@@ -189,7 +185,7 @@ export function generateRatingReminderNotification(
   locale: Locale = 'en'
 ) {
   const t = getNotificationTranslations(locale);
-  
+
   let timeDescription = '';
   if (hoursElapsed === 24) {
     timeDescription = locale === 'fr' ? '24 heures' : '24 hours';
@@ -204,12 +200,12 @@ export function generateRatingReminderNotification(
   } else {
     timeDescription = locale === 'fr' ? `${hoursElapsed} heures` : `${hoursElapsed} hours`;
   }
-  
+
   const title = t.ratingReminder.title;
   const message = t.ratingReminder.message
     .replace('{time}', timeDescription)
     .replace('{name}', partnerName);
-  
+
   return { title, message };
 }
 
@@ -221,9 +217,9 @@ export function generateProfileUpdateNotification(
   locale: Locale = 'en'
 ) {
   const t = getNotificationTranslations(locale);
-  
+
   const title = t.update.profileUpdated;
-  
+
   // Determine which specific message to use
   if (updatedFields.length === 1) {
     if (updatedFields[0] === 'email') {
@@ -232,23 +228,23 @@ export function generateProfileUpdateNotification(
       return { title, message: t.update.phoneUpdated };
     }
   }
-  
+
   // For multiple fields
-  const fieldLabels: Record<string, string> = locale === 'fr' 
+  const fieldLabels: Record<string, string> = locale === 'fr'
     ? {
-        name: 'Nom complet',
-        email: 'Adresse e-mail',
-        phone: 'Numéro de téléphone'
-      }
+      name: 'Nom complet',
+      email: 'Adresse e-mail',
+      phone: 'Numéro de téléphone'
+    }
     : {
-        name: 'Full name',
-        email: 'Email address',
-        phone: 'Phone number'
-      };
-  
+      name: 'Full name',
+      email: 'Email address',
+      phone: 'Phone number'
+    };
+
   const fieldNames = updatedFields.map(field => fieldLabels[field] || field).join(', ');
   const message = t.update.profileFieldsUpdated.replace('{fields}', fieldNames);
-  
+
   return { title, message };
 }
 
@@ -257,7 +253,7 @@ export function generateProfileUpdateNotification(
  */
 export function generatePasswordChangeNotification(locale: Locale = 'en') {
   const t = getNotificationTranslations(locale);
-  
+
   return {
     title: t.update.passwordChanged,
     message: t.update.passwordChangedMessage
@@ -274,7 +270,7 @@ export function generateWithdrawalApprovalNotification(
 ) {
   const t = getNotificationTranslations(locale);
   const formattedAmount = new Intl.NumberFormat('fr-FR').format(amount);
-  
+
   return {
     title: t.transaction.withdrawalApproved,
     message: t.transaction.withdrawalApprovedMessage
@@ -294,7 +290,7 @@ export function generateWithdrawalRejectionNotification(
 ) {
   const t = getNotificationTranslations(locale);
   const formattedAmount = new Intl.NumberFormat('fr-FR').format(amount);
-  
+
   return {
     title: t.transaction.withdrawalRejected,
     message: t.transaction.withdrawalRejectedMessage
@@ -313,14 +309,14 @@ export function generateIdVerificationNotification(
   locale: Locale = 'en'
 ) {
   const t = getNotificationTranslations(locale);
-  
-  const title = status === 'approved' 
-    ? t.idVerification.approved 
+
+  const title = status === 'approved'
+    ? t.idVerification.approved
     : t.idVerification.rejected;
-  
+
   let message = '';
   if (status === 'approved') {
-    message = documentType === 'national_id' 
+    message = documentType === 'national_id'
       ? t.idVerification.approvedMessageNationalId
       : t.idVerification.approvedMessagePassport;
   } else {
@@ -328,6 +324,6 @@ export function generateIdVerificationNotification(
       ? t.idVerification.rejectedMessageNationalId
       : t.idVerification.rejectedMessagePassport;
   }
-  
+
   return { title, message };
 }

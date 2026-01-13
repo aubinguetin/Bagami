@@ -40,12 +40,16 @@ export default function FcmProvider({ children }: { children: React.ReactNode })
           if (!token) return
           let userId = (session?.user?.id) || (typeof window !== 'undefined' ? (localStorage.getItem('bagami_user_id') || '') : '')
           if (!userId) {
-            for (let i = 0; i < 5; i++) {
-              await new Promise(r => setTimeout(r, 500))
+            // Increased retry mechanism: wait up to 10 seconds for session to load
+            for (let i = 0; i < 10; i++) {
+              await new Promise(r => setTimeout(r, 1000))
               userId = (session?.user?.id) || (typeof window !== 'undefined' ? (localStorage.getItem('bagami_user_id') || '') : '')
               if (userId) break
             }
-            if (!userId) return
+            if (!userId) {
+              console.warn('FCM: Could not get userId after 10 retries, will retry when session updates')
+              return
+            }
           }
           const r = await fetch('/api/notifications/register-fcm', {
             method: 'POST',

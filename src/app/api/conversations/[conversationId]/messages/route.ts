@@ -14,7 +14,7 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
     const url = new URL(request.url);
     const currentUserId = url.searchParams.get('currentUserId');
     const currentUserContact = url.searchParams.get('currentUserContact');
-    
+
     let currentUser = null;
 
     // Try NextAuth session first
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
         where: { email: session.user.email }
       });
     }
-    
+
     // Fallback to direct user lookup if no session or user not found
     if (!currentUser) {
       if (currentUserId) {
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
       } else if (currentUserContact) {
         // Decode the URL-encoded contact info
         const decodedContact = decodeURIComponent(currentUserContact);
-        
+
         currentUser = await prisma.user.findFirst({
           where: {
             OR: [
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
               AND CONCAT(countryCode, phone) = ${decodedContact}
               LIMIT 1
             ` as any[];
-            
+
             if (result && result.length > 0) {
               currentUser = result[0];
               console.log('✅ Messages GET: Found user with separated phone format:', currentUser.id);
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
     try {
       await requireActiveUser(currentUser.id);
     } catch (error) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         error: 'Your account has been suspended. Please contact customer service.',
         code: 'ACCOUNT_SUSPENDED'
       }, { status: 403 });
@@ -170,8 +170,8 @@ export async function GET(request: NextRequest, { params }: { params: { conversa
     });
 
     // Determine the other participant
-    const otherParticipant = conversation.participant1Id === currentUser.id 
-      ? conversation.participant2 
+    const otherParticipant = conversation.participant1Id === currentUser.id
+      ? conversation.participant2
       : conversation.participant1;
 
     // Calculate average rating for other participant
@@ -225,8 +225,8 @@ export async function POST(request: NextRequest, { params }: { params: { convers
     const { content, messageType = 'text', currentUserId, currentUserContact } = body;
 
     if (!content) {
-      return NextResponse.json({ 
-        error: 'Message content is required' 
+      return NextResponse.json({
+        error: 'Message content is required'
       }, { status: 400 });
     }
 
@@ -239,7 +239,7 @@ export async function POST(request: NextRequest, { params }: { params: { convers
         where: { email: session.user.email }
       });
     }
-    
+
     // Fallback to direct user lookup if no session or user not found
     if (!currentUser) {
       if (currentUserId) {
@@ -249,7 +249,7 @@ export async function POST(request: NextRequest, { params }: { params: { convers
       } else if (currentUserContact) {
         // Decode the URL-encoded contact info
         const decodedContact = decodeURIComponent(currentUserContact);
-        
+
         currentUser = await prisma.user.findFirst({
           where: {
             OR: [
@@ -269,7 +269,7 @@ export async function POST(request: NextRequest, { params }: { params: { convers
               AND CONCAT(countryCode, phone) = ${decodedContact}
               LIMIT 1
             ` as any[];
-            
+
             if (result && result.length > 0) {
               currentUser = result[0];
               console.log('✅ Messages POST: Found user with separated phone format:', currentUser.id);
@@ -289,7 +289,7 @@ export async function POST(request: NextRequest, { params }: { params: { convers
     try {
       await requireActiveUser(currentUser.id);
     } catch (error) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         error: 'Your account has been suspended. Please contact customer service.',
         code: 'ACCOUNT_SUSPENDED'
       }, { status: 403 });
@@ -320,8 +320,8 @@ export async function POST(request: NextRequest, { params }: { params: { convers
 
     // Check if the delivery has been deleted
     if (conversation.delivery.deletedAt) {
-      return NextResponse.json({ 
-        error: 'This delivery has been deleted. You can no longer send messages in this conversation.' 
+      return NextResponse.json({
+        error: 'This delivery has been deleted. You can no longer send messages in this conversation.'
       }, { status: 403 });
     }
 
@@ -346,24 +346,49 @@ export async function POST(request: NextRequest, { params }: { params: { convers
       data: { lastMessageAt: new Date() }
     });
 
-    // Broadcast new message to all SSE subscribers for this conversation (excluding sender)
+    // Broadcast new message to all SSE subscribers (legacy/backup)
     try {
       broadcastToConversation(conversationId, {
         type: 'new-message',
         conversationId: conversationId,
         message: message,
         timestamp: new Date().toISOString()
-      }, currentUser.id); // Exclude the sender from receiving the broadcast
-      console.log(`📡 Message broadcasted via SSE to conversation ${conversationId} (excluding sender ${currentUser.id})`);
+      }, currentUser.id);
     } catch (sseError) {
-      console.error('Error broadcasting via SSE:', sseError);
-      // Don't fail the API call if SSE broadcast fails
+      // Ignore SSE errors as we are migrating to Firebase
+    }
+
+    // Sync to Firebase Realtime Database
+    try {
+      const { db } = await import('@/lib/firebaseAdmin');
+      if (db) {
+        await db.ref(`conversations/${conversationId}/messages/${message.id}`).set({
+          id: message.id,
+          senderId: message.senderId,
+          content: message.content,
+          messageType: message.messageType,
+          createdAt: message.createdAt.toISOString()
+        });
+
+        // Update user conversations list (trigger refresh)
+        const recipientId = conversation.participant1Id === currentUser.id ?
+          conversation.participant2Id :
+          conversation.participant1Id;
+
+        await db.ref(`users/${recipientId}/conversations`).set(Date.now());
+        await db.ref(`users/${currentUser.id}/conversations`).set(Date.now());
+
+        console.log(`🔥 Message synced to Firebase Realtime DB`);
+      }
+    } catch (firebaseError) {
+      console.error('Error syncing to Firebase:', firebaseError);
+      // Don't fail the request if Firebase sync fails
     }
 
     // Update unread count for the message recipient
     try {
-      const recipientId = conversation.participant1Id === currentUser.id ? 
-        conversation.participant2Id : 
+      const recipientId = conversation.participant1Id === currentUser.id ?
+        conversation.participant2Id :
         conversation.participant1Id;
 
       // Get updated unread count for the recipient
@@ -380,6 +405,16 @@ export async function POST(request: NextRequest, { params }: { params: { convers
         }
       });
 
+      // Sync unread count to Firebase
+      try {
+        const { db } = await import('@/lib/firebaseAdmin');
+        if (db) {
+          await db.ref(`users/${recipientId}/unreadCount`).set(unreadCount);
+        }
+      } catch (fbError) {
+        console.error('Firebase unread count sync error', fbError);
+      }
+
       // Broadcast unread count update to recipient
       const { broadcastUnreadCountToUser } = await import('@/lib/sse');
       await broadcastUnreadCountToUser(recipientId, unreadCount);
@@ -391,8 +426,8 @@ export async function POST(request: NextRequest, { params }: { params: { convers
 
     // Create notification and push for recipient
     try {
-      const recipientId = conversation.participant1Id === currentUser.id ? 
-        conversation.participant2Id : 
+      const recipientId = conversation.participant1Id === currentUser.id ?
+        conversation.participant2Id :
         conversation.participant1Id;
 
       const locale = await getUserLocale(recipientId);

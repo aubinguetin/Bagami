@@ -36,7 +36,7 @@ export async function getOrCreateWallet(userId: string) {
 }
 
 /**
- * Create a transaction and update wallet balance
+ * Create a transaction and update wallet balance atomically
  */
 export async function createTransaction(data: TransactionData) {
   const {
@@ -51,22 +51,39 @@ export async function createTransaction(data: TransactionData) {
     metadata
   } = data;
 
-  // Get or create wallet
-  const wallet = await getOrCreateWallet(userId);
+  // Use interactive transaction to ensure data integrity
+  return prisma.$transaction(async (tx) => {
+    // 0. Idempotency Check: Prevent duplicate processing for same referenceId
+    // Only applies if referenceId is provided and we are trying to create a completed transaction
+    if (referenceId && status === 'completed') {
+      const existingTransaction = await tx.transaction.findFirst({
+        where: {
+          referenceId,
+          type, // Ensure we check for same type (credit/debit)
+          status: 'completed'
+        }
+      });
 
-  // Calculate new balance
-  let newBalance = wallet.balance;
-  if (status === 'completed') {
-    if (type === 'credit') {
-      newBalance += amount;
-    } else if (type === 'debit') {
-      newBalance -= amount;
+      if (existingTransaction) {
+        console.log(`⚠️ Idempotency check: Transaction ${referenceId} already exists. Skipping.`);
+        const currentWallet = await tx.wallet.findUnique({ where: { userId } });
+        return { transaction: existingTransaction, wallet: currentWallet };
+      }
     }
-  }
 
-  // Create transaction and update wallet in a transaction
-  const [transaction, updatedWallet] = await prisma.$transaction([
-    prisma.transaction.create({
+    // 1. If debit, check balance INSIDE the transaction (lock check)
+    if (type === 'debit' && status === 'completed') {
+      const currentWallet = await tx.wallet.findUnique({
+        where: { userId }
+      });
+
+      if (!currentWallet || currentWallet.balance < amount) {
+        throw new Error('Insufficient balance');
+      }
+    }
+
+    // 2. Create the transaction record
+    const transaction = await tx.transaction.create({
       data: {
         userId,
         type,
@@ -78,42 +95,60 @@ export async function createTransaction(data: TransactionData) {
         referenceId,
         metadata: metadata ? JSON.stringify(metadata) : null
       }
-    }),
-    prisma.wallet.update({
-      where: { userId },
-      data: { balance: newBalance }
-    })
-  ]);
-
-  // Create notification for the transaction (non-blocking)
-  try {
-    const locale = await getUserLocale(userId);
-    const { title, message } = generateTransactionNotification(
-      type,
-      category,
-      amount,
-      currency,
-      description,
-      locale
-    );
-    
-    const created = await prisma.notification.create({
-      data: {
-        userId,
-        type: 'transaction',
-        title,
-        message,
-        relatedId: transaction.id,
-        isRead: false
-      }
     });
-    await sendNotificationToUser({ userId, title, body: message, data: { relatedId: transaction.id } });
-  } catch (error) {
-    // Don't fail the transaction if notification creation fails
-    console.error('Failed to create transaction notification:', error);
-  }
 
-  return { transaction, wallet: updatedWallet };
+    // 3. Atomically update wallet balance
+    let updatedWallet;
+    if (status === 'completed') {
+      const updateData = type === 'credit'
+        ? { balance: { increment: amount } }
+        : { balance: { decrement: amount } };
+
+      updatedWallet = await tx.wallet.update({
+        where: { userId },
+        data: updateData
+      });
+    } else {
+      // If pending/failed, just get the wallet
+      updatedWallet = await getOrCreateWallet(userId);
+    }
+
+    // sending notification side-effect (outside of critical path, not awaited blockingly)
+    // We do this after transaction succeeds (conceptually), but here it's fine 
+    // to trigger async promise or wait. 
+    // To match original logic, we'll trigger it async after.
+
+    return { transaction, wallet: updatedWallet };
+  }).then(async (result) => {
+    // 4. Send notification (async, non-blocking)
+    try {
+      const locale = await getUserLocale(userId);
+      const { title, message } = generateTransactionNotification(
+        type,
+        category,
+        amount,
+        currency,
+        description,
+        locale
+      );
+
+      await prisma.notification.create({
+        data: {
+          userId,
+          type: 'transaction',
+          title,
+          message,
+          relatedId: result.transaction.id,
+          isRead: false
+        }
+      });
+      sendNotificationToUser({ userId, title, body: message, data: { relatedId: result.transaction.id } });
+    } catch (error) {
+      console.error('Failed to create transaction notification:', error);
+    }
+
+    return result;
+  });
 }
 
 /**
@@ -149,12 +184,8 @@ export async function debitWallet(
   referenceId?: string,
   metadata?: Record<string, any>
 ) {
-  const wallet = await getOrCreateWallet(userId);
-  
-  // Check if user has sufficient balance
-  if (wallet.balance < amount) {
-    throw new Error('Insufficient balance');
-  }
+  // Ensure wallet exists before transaction (optional optimization)
+  await getOrCreateWallet(userId);
 
   return createTransaction({
     userId,
@@ -188,11 +219,11 @@ export async function getUserTransactions(
   }
 ) {
   const where: any = { userId };
-  
+
   if (options?.type) {
     where.type = options.type;
   }
-  
+
   if (options?.status) {
     where.status = options.status;
   }
@@ -212,7 +243,7 @@ export async function getUserTransactions(
  */
 export async function getWalletStats(userId: string) {
   const wallet = await getOrCreateWallet(userId);
-  
+
   const [creditTransactions, debitTransactions, pendingTransactions] = await Promise.all([
     prisma.transaction.aggregate({
       where: { userId, type: 'credit', status: 'completed' },

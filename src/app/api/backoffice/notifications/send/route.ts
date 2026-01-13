@@ -6,7 +6,7 @@ import { checkBackofficeAuth, hasPermission } from '@/lib/backofficeAuth';
 export async function POST(request: NextRequest) {
   try {
     const auth = await checkBackofficeAuth();
-    
+
     if (!auth.isAuthenticated) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -108,6 +108,24 @@ export async function POST(request: NextRequest) {
     } catch (logError) {
       console.error('Failed to log admin action:', logError);
       // Continue even if logging fails
+    }
+
+    // Sync to Firebase to trigger real-time update
+    try {
+      const { db } = await import('@/lib/firebaseAdmin');
+      if (db) {
+        const updates: Record<string, number> = {};
+        targetUserIds.forEach(id => {
+          updates[`users/${id}/lastNotificationAt`] = Date.now();
+          // Also update unread count
+        });
+
+        // We really should update unread counts too, but it requires counting for each user.
+        // For now, triggering list refresh will eventually update unread count on client side
+        await db.ref().update(updates);
+      }
+    } catch (fbError) {
+      console.error('Firebase sync error for admin notifications:', fbError);
     }
 
     console.log(`✅ Admin notification sent to ${targetUserIds.length} users`);

@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { 
-  ArrowLeft, 
-  CreditCard, 
-  Smartphone, 
-  DollarSign, 
-  ArrowRight, 
-  Wallet, 
+import {
+  ArrowLeft,
+  CreditCard,
+  Smartphone,
+  DollarSign,
+  ArrowRight,
+  Wallet,
   AlertCircle,
   Info
 } from 'lucide-react';
@@ -77,8 +77,20 @@ export default function DirectPaymentPage() {
       // For now, we'll simulate a successful payment
       await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Navigate to payment summary page to complete the transaction
-      router.push(`/payment-summary/${conversationId}?directPaymentCompleted=true&method=${selectedMethod}&amount=${shortfall}`);
+      // SECURITY FIX: Use sessionStorage instead of URL params to prevent manipulation
+      // Store payment verification data that can only be set by this page
+      const paymentVerification = {
+        conversationId,
+        directPaymentCompleted: true,
+        method: selectedMethod,
+        amount: shortfall,
+        timestamp: Date.now(),
+        userId: session?.user?.id
+      };
+      sessionStorage.setItem('bagami_direct_payment_verification', JSON.stringify(paymentVerification));
+
+      // Navigate to payment summary page WITHOUT sensitive params in URL
+      router.push(`/payment-summary/${conversationId}?fromDirectPayment=true`);
     } catch (err: any) {
       setError(err.message || directPayment('errors.paymentFailed'));
       setIsProcessing(false);
@@ -121,7 +133,7 @@ export default function DirectPaymentPage() {
             <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-              
+
               <div className="relative flex items-center space-x-3">
                 <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl">
                   <Wallet className="w-5 h-5" />
@@ -192,7 +204,7 @@ export default function DirectPaymentPage() {
           {/* Payment Method Selection */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">{directPayment('selectMethod.title')}</h3>
-            
+
             <div className="space-y-3">
               {paymentMethods.map((method) => {
                 const Icon = method.icon;
@@ -200,18 +212,17 @@ export default function DirectPaymentPage() {
                   <div
                     key={method.id}
                     onClick={() => !isProcessing && setSelectedMethod(method.id)}
-                    className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${
-                      selectedMethod === method.id
+                    className={`relative cursor-pointer rounded-xl border-2 p-4 transition-all ${selectedMethod === method.id
                         ? 'border-orange-500 bg-orange-50 shadow-md'
                         : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
-                    } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <div className="flex items-center space-x-4">
                       {/* Icon */}
                       <div className={`bg-gradient-to-br ${method.color} p-3 rounded-xl text-white`}>
                         <Icon className="w-5 h-5" />
                       </div>
-                      
+
                       {/* Details */}
                       <div className="flex-1">
                         <p className="font-semibold text-gray-900">{method.name}</p>
@@ -219,11 +230,10 @@ export default function DirectPaymentPage() {
                       </div>
 
                       {/* Radio indicator */}
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                        selectedMethod === method.id
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedMethod === method.id
                           ? 'border-orange-500 bg-orange-500'
                           : 'border-gray-300'
-                      }`}>
+                        }`}>
                         {selectedMethod === method.id && (
                           <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
                         )}

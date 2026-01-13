@@ -396,22 +396,43 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
         token.provider = account.provider;
       }
+
+      // Initial sign in
       if (user) {
         token.user = user;
-        // Store user ID for future database queries
-        token.sub = user.id;
+        token.sub = user.id; // Correct CUID from Adapter
         token.role = (user as any).role || 'user';
       }
 
-      // Refresh role from database on each request (for admin role changes)
+      // Check DB for latest user state (role, isActive, etc.)
       if (token.sub) {
         const dbUser = await prisma.user.findUnique({
           where: { id: token.sub },
-          select: { role: true, isActive: true },
+          select: {
+            id: true, // explicit match
+            role: true,
+            isActive: true,
+            email: true,
+            name: true,
+            image: true,
+            phone: true
+          },
         });
+
         if (dbUser) {
           token.role = dbUser.role;
           token.isActive = dbUser.isActive;
+          // Ensure we update user object in token with latest DB data
+          token.user = {
+            ...token.user as any,
+            id: dbUser.id,
+            email: dbUser.email,
+            name: dbUser.name,
+            image: dbUser.image,
+            phone: dbUser.phone,
+            role: dbUser.role,
+            isActive: dbUser.isActive
+          };
         }
       }
 
@@ -436,26 +457,15 @@ export const authOptions: NextAuthOptions = {
           name: user.name
         });
 
-        try {
-          // Check if user exists in database
-          const existingUser = await prisma.user.findUnique({
-            where: { email: user.email! }
-          });
+        console.log(`${account.provider} sign-in successful:`, {
+          user: user.email,
+          name: user.name
+        });
 
-          if (!existingUser) {
-            // Create new user for OAuth
-            await prisma.user.create({
-              data: {
-                email: user.email!,
-                name: user.name,
-                image: user.image,
-                emailVerified: new Date(),
-              }
-            });
-          }
-        } catch (error) {
-          console.error('Error creating/checking user:', error);
-        }
+        // PrismaAdapter handles user creation automatically.
+        // We do not need to manually create the user here.
+        // Doing so causes conflicts with the Adapter and can lead to
+        // unlinked accounts or incorrect User IDs in the session.
 
         return true;
       }

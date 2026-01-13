@@ -43,7 +43,7 @@ export default function NotificationsPage() {
   // Check authentication
   useEffect(() => {
     const bagamiAuth = localStorage.getItem('bagami_authenticated');
-    
+
     if (status === 'authenticated' || bagamiAuth === 'true') {
       setIsAuthenticated(true);
     } else if (status === 'unauthenticated' && !bagamiAuth) {
@@ -162,7 +162,7 @@ export default function NotificationsPage() {
   };
 
   // Handle notification click
-    const handleNotificationClick = async (notification: Notification) => {
+  const handleNotificationClick = async (notification: Notification) => {
     // Mark as read if not already
     if (!notification.isRead) {
       await markAsRead(notification.id);
@@ -214,16 +214,16 @@ export default function NotificationsPage() {
       case 'update':
         // Check message content to determine destination
         const message = notification.message.toLowerCase();
-        
+
         // Profile information updates (name, email, phone) go to my-information page
-        if (message.includes('full name') || 
-            message.includes('email address') || 
-            message.includes('phone number')) {
+        if (message.includes('full name') ||
+          message.includes('email address') ||
+          message.includes('phone number')) {
           router.push('/settings/my-information');
-        } 
+        }
         // Password and ID verification go to settings page
-        else if (message.includes('password') || 
-                 message.includes('id verification')) {
+        else if (message.includes('password') ||
+          message.includes('id verification')) {
           router.push('/settings?returnUrl=/notifications');
         }
         // Default to settings for other update notifications
@@ -253,7 +253,7 @@ export default function NotificationsPage() {
     if (d.toDateString() === today.toDateString()) {
       return 'Today';
     }
-    
+
     // Check if it's yesterday
     if (d.toDateString() === yesterday.toDateString()) {
       return 'Yesterday';
@@ -306,16 +306,18 @@ export default function NotificationsPage() {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [isAuthenticated]);
 
-  // Auto-refresh every 30 seconds
-  useEffect(() => {
-    if (!isAuthenticated) return;
-
-    const interval = setInterval(() => {
+  // Listen for real-time notification updates
+  // This replaces the 30s polling interval
+  const { useRealtimeNotifications } = require('@/hooks/useFirebaseRealtime');
+  useRealtimeNotifications(getUserId(), () => {
+    if (isAuthenticated) {
+      console.log('🔔 Real-time notification signal received, refreshing...');
+      fetchNotifications();
       fetchUnreadCount();
-    }, 30000);
+    }
+  });
 
-    return () => clearInterval(interval);
-  }, [isAuthenticated]);
+  // Removed polling interval in favor of real-time updates
 
   if (status === 'loading' || isLoading) {
     return (
@@ -393,7 +395,7 @@ export default function NotificationsPage() {
                     fetchNotifications();
                     fetchUnreadCount();
                   }
-                } catch {}
+                } catch { }
               }}
               className="flex items-center space-x-2 px-4 py-2.5 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-xl transition-colors"
             >
@@ -415,16 +417,15 @@ export default function NotificationsPage() {
               {notifications.map((notification) => {
                 // Translate notification content based on current locale
                 const { title, message } = translateNotification(notification, locale as 'en' | 'fr');
-                
+
                 return (
                   <button
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
-                    className={`w-full text-left p-4 rounded-2xl transition-all duration-200 active:scale-[0.98] ${
-                      notification.isRead
+                    className={`w-full text-left p-4 rounded-2xl transition-all duration-200 active:scale-[0.98] ${notification.isRead
                         ? 'bg-white border border-gray-100 hover:border-gray-200 hover:shadow-sm'
                         : 'bg-gradient-to-br from-orange-50 to-orange-50/50 border-2 border-orange-200 hover:border-orange-300 shadow-sm hover:shadow-md'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
@@ -433,35 +434,31 @@ export default function NotificationsPage() {
                           {!notification.isRead && (
                             <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0 mt-1.5"></div>
                           )}
-                          <p className={`text-sm font-bold leading-snug ${
-                            notification.isRead ? 'text-gray-900' : 'text-orange-900'
-                          }`}>
+                          <p className={`text-sm font-bold leading-snug ${notification.isRead ? 'text-gray-900' : 'text-orange-900'
+                            }`}>
                             {title}
                           </p>
                         </div>
-                        
+
                         {/* Message */}
-                        <p className={`text-sm mb-3 leading-relaxed ${
-                          notification.isRead ? 'text-gray-600' : 'text-gray-800'
-                        } ${!notification.isRead ? 'ml-4' : ''}`}>
+                        <p className={`text-sm mb-3 leading-relaxed ${notification.isRead ? 'text-gray-600' : 'text-gray-800'
+                          } ${!notification.isRead ? 'ml-4' : ''}`}>
                           {message}
                         </p>
-                      
-                      {/* Time ago */}
-                      <div className={`flex items-center gap-1.5 text-xs ${
-                        notification.isRead ? 'text-gray-500' : 'text-orange-700/70'
-                      } ${!notification.isRead ? 'ml-4' : ''}`}>
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{formatTimeAgo(notification.createdAt)}</span>
+
+                        {/* Time ago */}
+                        <div className={`flex items-center gap-1.5 text-xs ${notification.isRead ? 'text-gray-500' : 'text-orange-700/70'
+                          } ${!notification.isRead ? 'ml-4' : ''}`}>
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>{formatTimeAgo(notification.createdAt)}</span>
+                        </div>
                       </div>
+
+                      {/* Chevron */}
+                      <ChevronRight className={`w-5 h-5 flex-shrink-0 mt-1 ${notification.isRead ? 'text-gray-300' : 'text-orange-400'
+                        }`} />
                     </div>
-                    
-                    {/* Chevron */}
-                    <ChevronRight className={`w-5 h-5 flex-shrink-0 mt-1 ${
-                      notification.isRead ? 'text-gray-300' : 'text-orange-400'
-                    }`} />
-                  </div>
-                </button>
+                  </button>
                 );
               })}
             </div>
@@ -533,7 +530,7 @@ export default function NotificationsPage() {
       </nav>
 
       {/* Post Type Selection Modal */}
-      <PostTypeSelectionModal 
+      <PostTypeSelectionModal
         isOpen={showPostTypeModal}
         onClose={() => setShowPostTypeModal(false)}
       />

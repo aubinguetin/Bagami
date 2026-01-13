@@ -130,6 +130,22 @@ export async function checkAndNotifyAlertMatches(delivery: DeliveryData) {
 
     console.log(`✅ Created ${notifications.length} notifications for alert matches`);
 
+    // Sync to Firebase to trigger real-time update
+    try {
+      const { db } = await import('@/lib/firebaseAdmin');
+      if (db) {
+        const updates: Record<string, number> = {};
+        notifications.forEach(n => {
+          updates[`users/${n.userId}/lastNotificationAt`] = Date.now();
+          // Also update unread count if we can, but checking count requires a DB query per user, 
+          // might be expensive here if many users. simpler to just trigger refresh.
+        });
+        await db.ref().update(updates);
+      }
+    } catch (fbError) {
+      console.error('Firebase sync error for alert notifications:', fbError);
+    }
+
     // TODO: Send email notifications for users who have emailNotifications enabled
     // This can be implemented later with your email service
 

@@ -92,7 +92,7 @@ const getCurrentUserInfo = () => {
   // Try localStorage first (fallback auth)
   const currentUserId = localStorage.getItem('bagami_user_id');
   const currentUserContact = localStorage.getItem('bagami_user_contact');
-  
+
   return {
     userId: currentUserId,
     userContact: currentUserContact
@@ -111,7 +111,7 @@ export const queryKeys = {
 // API Functions
 const fetchDeliveries = async (filters: DeliveryFilters): Promise<DeliveryResponse> => {
   const { userId: currentUserId, userContact: currentUserContact } = getCurrentUserInfo();
-  
+
   const params = new URLSearchParams({
     filter: filters.filter,
     search: filters.searchQuery,
@@ -121,17 +121,17 @@ const fetchDeliveries = async (filters: DeliveryFilters): Promise<DeliveryRespon
     page: (filters.page || 1).toString(),
     limit: (filters.limit || 20).toString()
   });
-  
+
   // Add fallback auth params for ownership checking
   if (currentUserId) params.set('currentUserId', currentUserId);
   if (currentUserContact) params.set('currentUserContact', currentUserContact);
 
   const response = await fetch(`/api/deliveries/search?${params}`);
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch deliveries');
   }
-  
+
   const result = await response.json();
   return {
     deliveries: result.deliveries || [],
@@ -141,34 +141,34 @@ const fetchDeliveries = async (filters: DeliveryFilters): Promise<DeliveryRespon
 
 const fetchConversations = async (): Promise<Conversation[]> => {
   const { userId: currentUserId, userContact: currentUserContact } = getCurrentUserInfo();
-  
+
   const params = new URLSearchParams();
   if (currentUserId) params.set('currentUserId', currentUserId);
   if (currentUserContact) params.set('currentUserContact', encodeURIComponent(currentUserContact));
-  
+
   const response = await fetch(`/api/conversations${params.toString() ? '?' + params.toString() : ''}`);
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch conversations');
   }
-  
+
   const result = await response.json();
   return result.conversations || [];
 };
 
 const fetchMessages = async (conversationId: string): Promise<{ conversation: Conversation; messages: Message[] }> => {
   const { userId: currentUserId, userContact: currentUserContact } = getCurrentUserInfo();
-  
+
   const params = new URLSearchParams();
   if (currentUserId) params.set('currentUserId', currentUserId);
   if (currentUserContact) params.set('currentUserContact', encodeURIComponent(currentUserContact));
-  
+
   const response = await fetch(`/api/conversations/${conversationId}/messages${params.toString() ? '?' + params.toString() : ''}`);
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch messages');
   }
-  
+
   const result = await response.json();
   return {
     conversation: result.conversation,
@@ -178,22 +178,23 @@ const fetchMessages = async (conversationId: string): Promise<{ conversation: Co
 
 const fetchUnreadCount = async (): Promise<number> => {
   const { userId: currentUserId, userContact: currentUserContact } = getCurrentUserInfo();
-  
+
   const params = new URLSearchParams();
   if (currentUserId) params.set('currentUserId', currentUserId);
   if (currentUserContact) params.set('currentUserContact', encodeURIComponent(currentUserContact));
-  
+
   const response = await fetch(`/api/messages/unread-count${params.toString() ? '?' + params.toString() : ''}`);
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch unread count');
   }
-  
+
   const result = await response.json();
   return result.unreadCount || 0;
 };
 
 // Custom Hooks
+import { useRealtimeConversationMessages, useRealtimeConversations, useRealtimeUnreadCount as useRealtimeUnreadCountHook } from './useFirebaseRealtime';
 
 /**
  * Hook to fetch deliveries with caching and smart refresh
@@ -204,12 +205,11 @@ export const useDeliveries = (filters: DeliveryFilters, options?: Partial<UseQue
   return useQuery({
     queryKey: queryKeys.deliveriesWithFilters(filters),
     queryFn: () => fetchDeliveries(filters),
-    staleTime: 10 * 1000, // 10 seconds (fresh for real-time feel)
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 10 * 1000,
+    gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: true,
     refetchOnMount: 'always',
-    refetchInterval: 10 * 1000, // Auto-refetch every 10 seconds for real-time updates
-    refetchIntervalInBackground: true, // Continue polling in background
+    refetchInterval: 30 * 1000, // Reduced polling frequency to 30s as we move to realtime
     retry: 3,
     ...options,
   });
@@ -221,15 +221,20 @@ export const useDeliveries = (filters: DeliveryFilters, options?: Partial<UseQue
  * Background refetch: enabled
  */
 export const useConversations = (options?: Partial<UseQueryOptions<Conversation[], Error>>) => {
+  // Integreate Realtime Updates
+  const { userId } = getCurrentUserInfo();
+  if (userId) {
+    useRealtimeConversations(userId);
+  }
+
   return useQuery({
     queryKey: queryKeys.conversations,
     queryFn: fetchConversations,
-    staleTime: 10 * 1000, // 10 seconds
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
     refetchOnMount: 'always',
-    refetchInterval: 10 * 1000, // Auto-refetch every 10 seconds
-    refetchIntervalInBackground: true,
+    // Removed frequent polling as we now have realtime updates
     retry: 3,
     ...options,
   });
@@ -241,17 +246,19 @@ export const useConversations = (options?: Partial<UseQueryOptions<Conversation[
  * Background refetch: enabled
  */
 export const useMessages = (conversationId: string, options?: Partial<UseQueryOptions<{ conversation: Conversation; messages: Message[] }, Error>>) => {
+  // Integreate Realtime Updates
+  useRealtimeConversationMessages(conversationId);
+
   return useQuery({
     queryKey: queryKeys.messages(conversationId),
     queryFn: () => fetchMessages(conversationId),
-    staleTime: 2 * 1000, // 2 seconds (very fresh for real-time feel)
-    gcTime: 3 * 60 * 1000, // 3 minutes
+    staleTime: 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: true,
     refetchOnMount: 'always',
-    refetchInterval: 3 * 1000, // Auto-refetch every 3 seconds for real-time messaging
-    refetchIntervalInBackground: true, // Continue polling in background
+    // Removed frequent polling as we now have realtime updates
     retry: 3,
-    enabled: !!conversationId, // Only fetch if conversationId is provided
+    enabled: !!conversationId,
     ...options,
   });
 };
@@ -262,15 +269,19 @@ export const useMessages = (conversationId: string, options?: Partial<UseQueryOp
  * Background refetch: enabled
  */
 export const useUnreadCount = (options?: Partial<UseQueryOptions<number, Error>>) => {
+  // Integreate Realtime Updates
+  const { userId } = getCurrentUserInfo();
+  if (userId) {
+    useRealtimeUnreadCountHook(userId);
+  }
+
   return useQuery({
     queryKey: queryKeys.unreadCount,
     queryFn: fetchUnreadCount,
-    staleTime: 5 * 1000, // 5 seconds
-    gcTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
     refetchOnMount: 'always',
-    refetchInterval: undefined,
-    refetchIntervalInBackground: undefined,
     retry: 3,
     ...options,
   });
@@ -283,11 +294,11 @@ export const useUnreadCount = (options?: Partial<UseQueryOptions<number, Error>>
  */
 export const useSendMessage = (options?: UseMutationOptions<any, Error, { conversationId: string; content: string }>) => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ conversationId, content }) => {
       const { userId: currentUserId, userContact: currentUserContact } = getCurrentUserInfo();
-      
+
       const response = await fetch(`/api/conversations/${conversationId}/messages`, {
         method: 'POST',
         headers: {
@@ -321,7 +332,7 @@ export const useSendMessage = (options?: UseMutationOptions<any, Error, { conver
 // Refresh helpers for manual refresh functionality
 export const useRefreshDeliveries = () => {
   const queryClient = useQueryClient();
-  
+
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.deliveries });
   };
@@ -329,7 +340,7 @@ export const useRefreshDeliveries = () => {
 
 export const useRefreshConversations = () => {
   const queryClient = useQueryClient();
-  
+
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.conversations });
   };
@@ -337,7 +348,7 @@ export const useRefreshConversations = () => {
 
 export const useRefreshMessages = () => {
   const queryClient = useQueryClient();
-  
+
   return (conversationId?: string) => {
     if (conversationId) {
       queryClient.invalidateQueries({ queryKey: queryKeys.messages(conversationId) });
@@ -349,7 +360,7 @@ export const useRefreshMessages = () => {
 
 export const useRefreshUnreadCount = () => {
   const queryClient = useQueryClient();
-  
+
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.unreadCount });
   };

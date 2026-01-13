@@ -50,10 +50,38 @@ export default function FacebookSignInButton({
           }
         }
       } else {
-        await signIn('facebook', {
-          callbackUrl: '/deliveries', // Redirect to deliveries page after sign-in
-          redirect: true,
-        });
+        // Web: Use Firebase JS SDK
+        const { signInWithPopup } = await import('firebase/auth');
+        const { auth, facebookProvider } = await import('@/lib/firebaseClient');
+
+        try {
+          const result = await signInWithPopup(auth, facebookProvider);
+          const user = result.user;
+          const idToken = await user.getIdToken();
+
+          console.log('🌐 Web Facebook Login success, verifying with backend...');
+
+          // Reuse the facebook-mobile provider which expects an ID token
+          const signInResult = await signIn('facebook-mobile', {
+            idToken: idToken,
+            callbackUrl: '/deliveries',
+            redirect: false,
+          });
+
+          if (signInResult?.ok) {
+            console.log('✅ Backend verification successful');
+            window.location.href = '/deliveries';
+          } else {
+            console.error('❌ Backend verification failed:', signInResult?.error);
+            alert(`Login failed: ${signInResult?.error}`);
+          }
+
+        } catch (firebaseError: any) {
+          console.error('Firebase popup error:', firebaseError);
+          if (firebaseError.code !== 'auth/popup-closed-by-user') {
+            alert('Facebook login failed. Please try again.');
+          }
+        }
       }
     } catch (error) {
       console.error('Facebook sign-in error:', error);

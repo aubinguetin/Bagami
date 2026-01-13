@@ -8,7 +8,7 @@ import { sendNotificationToUser } from '@/lib/push/fcm';
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -18,6 +18,18 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { userId, amount, description, category, type = 'debit', referenceId, metadata } = body;
+
+    // Security check: Verify user is recording transaction for themselves
+    if (userId !== session.user.id) {
+      console.error('Security alert: User attempted to record transaction for another user', {
+        sessionUserId: session.user.id,
+        requestedUserId: userId
+      });
+      return NextResponse.json(
+        { error: 'Unauthorized: Cannot record transaction for another user' },
+        { status: 403 }
+      );
+    }
 
     // Validate inputs
     if (!userId || !amount || !description || !category) {

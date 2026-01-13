@@ -56,7 +56,10 @@
     "eslint-config-next": "^13.5.0",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.1.0"
+    "typescript": "^5.1.0",
+    "vite-tsconfig-paths": "^6.0.4",
+    "vitest": "^4.0.16",
+    "vitest-mock-extended": "^3.1.0"
   },
   "keywords": [
     "bagami",

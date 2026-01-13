@@ -39,7 +39,7 @@ function getCountryFlag(countryCodeOrName: string): string {
     'ZA': '🇿🇦', 'ZM': '🇿🇲', 'ZW': '🇿🇼',
     'Burkina Faso': '🇧🇫', 'United States': '🇺🇸', 'United Kingdom': '🇬🇧', 'South Africa': '🇿🇦'
   };
-  
+
   return flagMap[countryCodeOrName] || '🏳️';
 }
 
@@ -68,7 +68,7 @@ export default function PaymentSummaryPage() {
   const conversationId = params?.conversationId as string;
   const { payment } = useT();
   const locale = useLocale();
-  
+
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [agreedPrice, setAgreedPrice] = useState<number>(0);
   const [agreedCurrency, setAgreedCurrency] = useState<string>('FCFA');
@@ -80,19 +80,44 @@ export default function PaymentSummaryPage() {
   const [directPaymentMethod, setDirectPaymentMethod] = useState<string>('');
   const [directPaymentAmount, setDirectPaymentAmount] = useState<number>(0);
 
-  // Check for direct payment completion
+  // Check for direct payment completion - SECURELY via sessionStorage
   useEffect(() => {
+    // SECURITY FIX: Read from sessionStorage instead of URL params
+    // URL params can be manipulated by attackers to bypass payment
     const urlParams = new URLSearchParams(window.location.search);
-    const completed = urlParams.get('directPaymentCompleted');
-    const method = urlParams.get('method');
-    const amount = urlParams.get('amount');
-    
-    if (completed === 'true' && method && amount) {
-      setDirectPaymentCompleted(true);
-      setDirectPaymentMethod(method);
-      setDirectPaymentAmount(parseFloat(amount));
+    const fromDirectPayment = urlParams.get('fromDirectPayment');
+
+    if (fromDirectPayment === 'true') {
+      try {
+        const storedData = sessionStorage.getItem('bagami_direct_payment_verification');
+        if (storedData) {
+          const verification = JSON.parse(storedData);
+
+          // Validate the stored data
+          const now = Date.now();
+          const maxAge = 5 * 60 * 1000; // 5 minutes max age
+
+          if (
+            verification.conversationId === conversationId &&
+            verification.directPaymentCompleted === true &&
+            verification.userId === session?.user?.id &&
+            verification.timestamp && (now - verification.timestamp) < maxAge
+          ) {
+            setDirectPaymentCompleted(true);
+            setDirectPaymentMethod(verification.method || '');
+            setDirectPaymentAmount(verification.amount || 0);
+
+            // Clear the storage after reading to prevent replay attacks
+            sessionStorage.removeItem('bagami_direct_payment_verification');
+          } else {
+            console.warn('Direct payment verification failed validation');
+          }
+        }
+      } catch (e) {
+        console.error('Error parsing direct payment verification:', e);
+      }
     }
-  }, []);
+  }, [conversationId, session?.user?.id]);
 
   // Auto-confirm payment after direct payment is completed
   useEffect(() => {
@@ -102,7 +127,7 @@ export default function PaymentSummaryPage() {
       const timer = setTimeout(() => {
         handleConfirmPayment();
       }, 500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [directPaymentCompleted, conversation, agreedPrice, session]);
@@ -116,7 +141,7 @@ export default function PaymentSummaryPage() {
         console.log('🔍 Fetching conversation:', conversationId);
         const response = await fetch(`/api/conversations/${conversationId}`);
         if (!response.ok) throw new Error('Failed to fetch conversation');
-        
+
         const data = await response.json();
         console.log('📦 Conversation data received:', data);
         console.log('💰 Delivery price from API:', data.delivery.price);
@@ -128,7 +153,7 @@ export default function PaymentSummaryPage() {
           const messagesData = await messagesResponse.json();
           const messages = messagesData.messages || [];
           console.log('📨 Messages received:', messages.length);
-          
+
           // Find the most recent accepted offer or use delivery price
           const offerMessages = messages
             .filter((m: any) => m.messageType === 'offer')
@@ -169,7 +194,7 @@ export default function PaymentSummaryPage() {
           setAgreedPrice(data.delivery.price);
           setAgreedCurrency('FCFA'); // Always use FCFA
         }
-        
+
         setIsLoading(false);
       } catch (error) {
         console.error('❌ Error fetching conversation:', error);
@@ -187,18 +212,18 @@ export default function PaymentSummaryPage() {
     console.log('Agreed Price:', agreedPrice);
     console.log('Agreed Currency:', agreedCurrency);
     console.log('Delivery Title:', conversation?.delivery?.title);
-    
+
     if (!conversation) {
       alert('Conversation not found. Please try again.');
       return;
     }
-    
+
     if (!session?.user?.id) {
       alert('Session expired. Please login again.');
       router.push('/auth/signin');
       return;
     }
-    
+
     setIsProcessingPayment(true);
     try {
       // Calculate platform fee (call API endpoint instead of direct function)
@@ -207,13 +232,13 @@ export default function PaymentSummaryPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: agreedPrice })
       });
-      
+
       if (!feeResponse.ok) {
         throw new Error('Failed to calculate platform fee');
       }
-      
+
       const feeCalculation = await feeResponse.json();
-      
+
       console.log('🔍 Platform Fee Calculation:', {
         agreedPrice,
         feeRate: feeCalculation.feeRate,
@@ -222,7 +247,7 @@ export default function PaymentSummaryPage() {
         netAmount: feeCalculation.netAmount,
         grossAmount: feeCalculation.grossAmount
       });
-      
+
       console.log('Payment data:', {
         userId: session.user.id,
         amount: agreedPrice,
@@ -230,25 +255,25 @@ export default function PaymentSummaryPage() {
         platformFee: feeCalculation.feeAmount,
         netAmount: feeCalculation.netAmount
       });
-      
+
       // Check wallet balance first
       const walletCheckResponse = await fetch(`/api/wallet/balance?userId=${session.user.id}`);
-      
+
       if (!walletCheckResponse.ok) {
         throw new Error('Failed to check wallet balance');
       }
-      
+
       const walletData = await walletCheckResponse.json();
       const currentBalance = walletData.balance || 0;
-      
+
       // If direct payment was completed, we need to process both transactions
       if (directPaymentCompleted && directPaymentAmount > 0) {
         // User has already paid the shortfall via direct payment
         // Now we need to deduct the wallet balance and create both transactions
-        
+
         const walletAmount = currentBalance; // Use all available wallet balance
         const shortfall = directPaymentAmount; // Amount paid via direct payment
-        
+
         // Deduct wallet balance
         if (walletAmount > 0) {
           const walletRequestBody = {
@@ -268,18 +293,18 @@ export default function PaymentSummaryPage() {
               directPaymentAmount: shortfall
             }
           };
-          
+
           const walletResponse = await fetch('/api/wallet/debit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(walletRequestBody)
           });
-  
+
           if (!walletResponse.ok) {
             throw new Error('Failed to deduct wallet balance');
           }
         }
-        
+
         // Record the direct payment transaction
         const directPaymentRequestBody = {
           userId: session.user.id,
@@ -300,7 +325,7 @@ export default function PaymentSummaryPage() {
             directPaymentAmount: shortfall
           }
         };
-        
+
         const directPaymentResponse = await fetch('/api/wallet/record-transaction', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -310,7 +335,7 @@ export default function PaymentSummaryPage() {
         if (!directPaymentResponse.ok) {
           throw new Error('Failed to record direct payment transaction');
         }
-        
+
         // Continue with payment confirmation...
       } else {
         // Check if user has sufficient balance for full wallet payment
@@ -321,22 +346,22 @@ export default function PaymentSummaryPage() {
           return;
         }
       }
-      
+
       // Validate all required fields before sending
       if (!session.user.id) {
         throw new Error('User ID is missing');
       }
-      
+
       if (!agreedPrice || agreedPrice <= 0) {
         throw new Error('Invalid payment amount');
       }
-      
+
       if (!conversation.delivery.title) {
         throw new Error('Delivery title is missing');
       }
-      
+
       let walletResult;
-      
+
       // Only deduct full amount from wallet if NOT using direct payment
       if (!directPaymentCompleted) {
         // Deduct payment from user's wallet
@@ -356,9 +381,9 @@ export default function PaymentSummaryPage() {
             netAmount: feeCalculation.netAmount
           }
         };
-        
+
         console.log('Sending wallet debit request:', requestBody);
-        
+
         const walletResponse = await fetch('/api/wallet/debit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -378,10 +403,10 @@ export default function PaymentSummaryPage() {
           walletResult = await balanceResponse.json();
         }
       }
-      
+
       // Generate a 6-digit delivery confirmation code
       const deliveryCode = Math.floor(100000 + Math.random() * 900000).toString();
-      
+
       // Create payment confirmation data
       const paymentData: any = {
         type: 'payment',
@@ -401,7 +426,7 @@ export default function PaymentSummaryPage() {
         feeRate: feeCalculation.feeRate,
         feePercentage: feeCalculation.feePercentage
       };
-      
+
       // Add payment breakdown if direct payment was used
       if (directPaymentCompleted && directPaymentAmount > 0) {
         paymentData.paymentBreakdown = {
@@ -423,7 +448,7 @@ export default function PaymentSummaryPage() {
           messageType: 'payment'
         })
       });
-      
+
       // Redirect back to chat with success message
       router.push(`/chat/${conversationId}?paymentSuccess=true`);
     } catch (error) {
@@ -494,19 +519,17 @@ export default function PaymentSummaryPage() {
           <div className="flex items-center justify-center relative">
             <button
               onClick={() => router.back()}
-              className={`absolute left-0 flex items-center justify-center w-10 h-10 bg-white rounded-full border-2 transition-all hover:scale-105 ${
-                conversation.delivery.type === 'request'
+              className={`absolute left-0 flex items-center justify-center w-10 h-10 bg-white rounded-full border-2 transition-all hover:scale-105 ${conversation.delivery.type === 'request'
                   ? 'border-orange-500 text-orange-600'
                   : 'border-blue-500 text-blue-600'
-              }`}
+                }`}
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <div className={`px-6 py-2 rounded-full border-2 ${
-              conversation.delivery.type === 'request'
+            <div className={`px-6 py-2 rounded-full border-2 ${conversation.delivery.type === 'request'
                 ? 'bg-orange-500 border-orange-500'
                 : 'bg-blue-500 border-blue-500'
-            }`}>
+              }`}>
               <h1 className="text-base font-bold text-white">{payment('title')}</h1>
             </div>
           </div>
@@ -537,15 +560,13 @@ export default function PaymentSummaryPage() {
         <div className="bg-white rounded-xl shadow-xl overflow-hidden">
           <div className="p-4 space-y-3">
             {/* Trip Details Card */}
-            <div className={`rounded-lg p-3 border space-y-2 ${
-              conversation.delivery.type === 'request'
+            <div className={`rounded-lg p-3 border space-y-2 ${conversation.delivery.type === 'request'
                 ? 'bg-gradient-to-br from-orange-50 to-red-50 border-orange-200'
                 : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200'
-            }`}>
+              }`}>
               <div className="flex items-start gap-2">
-                <div className={`p-2 rounded-lg ${
-                  conversation.delivery.type === 'request' ? 'bg-orange-500' : 'bg-blue-500'
-                }`}>
+                <div className={`p-2 rounded-lg ${conversation.delivery.type === 'request' ? 'bg-orange-500' : 'bg-blue-500'
+                  }`}>
                   {conversation.delivery.type === 'request' ? (
                     <Package className="w-4 h-4 text-white" />
                   ) : (
@@ -562,9 +583,8 @@ export default function PaymentSummaryPage() {
 
               {/* Route */}
               <div className="flex items-center gap-2 text-xs">
-                <MapPin className={`w-4 h-4 flex-shrink-0 ${
-                  conversation.delivery.type === 'request' ? 'text-orange-600' : 'text-blue-600'
-                }`} />
+                <MapPin className={`w-4 h-4 flex-shrink-0 ${conversation.delivery.type === 'request' ? 'text-orange-600' : 'text-blue-600'
+                  }`} />
                 <span className="text-gray-700 truncate">
                   <span className="font-semibold">{getCountryFlag(conversation.delivery.fromCountry)} {conversation.delivery.fromCity}</span>
                   <span className="mx-2 text-gray-400">→</span>
@@ -574,12 +594,11 @@ export default function PaymentSummaryPage() {
 
               {/* Date */}
               <div className="flex items-center gap-2 text-xs">
-                <Calendar className={`w-4 h-4 flex-shrink-0 ${
-                  conversation.delivery.type === 'request' ? 'text-orange-600' : 'text-blue-600'
-                }`} />
+                <Calendar className={`w-4 h-4 flex-shrink-0 ${conversation.delivery.type === 'request' ? 'text-orange-600' : 'text-blue-600'
+                  }`} />
                 <span className="text-gray-700">
-                  {new Date(conversation.delivery.departureDate).toLocaleDateString('en-US', { 
-                    month: 'short', 
+                  {new Date(conversation.delivery.departureDate).toLocaleDateString('en-US', {
+                    month: 'short',
                     day: 'numeric',
                     year: 'numeric'
                   })}
@@ -589,9 +608,8 @@ export default function PaymentSummaryPage() {
               {/* Weight */}
               {conversation.delivery.weight && (
                 <div className="flex items-center gap-2 text-xs">
-                  <Scale className={`w-4 h-4 flex-shrink-0 ${
-                    conversation.delivery.type === 'request' ? 'text-orange-600' : 'text-blue-600'
-                  }`} />
+                  <Scale className={`w-4 h-4 flex-shrink-0 ${conversation.delivery.type === 'request' ? 'text-orange-600' : 'text-blue-600'
+                    }`} />
                   <span className="text-gray-700">{conversation.delivery.weight} kg</span>
                 </div>
               )}
@@ -639,7 +657,7 @@ export default function PaymentSummaryPage() {
               <div className="text-xs text-gray-700">
                 <p className="font-bold text-blue-900 mb-1">{payment('protection.title')}</p>
                 <p className="leading-relaxed">
-                  {conversation.delivery.type === 'request' 
+                  {conversation.delivery.type === 'request'
                     ? payment('protection.messageRequest')
                     : payment('protection.messageOffer')
                   }
